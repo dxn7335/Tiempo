@@ -1,6 +1,14 @@
-body{
+html,body{
 	padding:0;
 	margin:0;
+	font-family: 'Open sans', 'Avenir','Verdana';
+	height:100%;
+	background: #f4ad48;
+    background: -webkit-gradient(linear, 0 0, 0 100%, from(#f4ad48), to(#ea274b));
+    background: -webkit-linear-gradient(top, #f4ad48, #ea274b);
+    background: -moz-linear-gradient(top, #f4ad48, #ea274b);
+    background: -ms-linear-gradient(top, #f4ad48, #ea274b);
+    background: linear-gradient(to bottom, #f4ad48, #ea274b);
 }
 
 /* Climacons */
@@ -13,3 +21,111 @@ body{
     font-weight: normal;
     font-style: normal;
 }
+
+@keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+/* Firefox < 16 */
+@-moz-keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+/* Safari, Chrome and Opera > 12.1 */
+@-webkit-keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+/* Internet Explorer */
+@-ms-keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+.splash
+{
+    z-index: 10;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.splash:before
+{
+    display: block;
+    content: "\a0";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: transparent url(../assets/tiempo.png) no-repeat 50% 50%;
+    background-size: auto 25%;
+}
+
+.loading{
+	-webkit-animation: fadein 1.5s; /* Safari, Chrome and Opera > 12.1 */
+   	-moz-animation: fadein 1.5s; /* Firefox < 16 */
+    -ms-animation: fadein 1.5s; /* Internet Explorer */
+     -o-animation: fadein 1.5s; /* Opera < 12.1 */   
+}
+.loading > span{
+	color: #FFF;
+	font-weight: 300;
+	display: block;
+	text-align: center;
+	position: absolute;
+	/* margin-top: 48%; */
+	/* width: 30%; */
+	/* height: 30%; */
+	width: 160px;
+	height: 160px;
+	padding: 3%;
+	margin: auto;
+	/* margin-top: 20%; */
+	border-radius: 50%;
+	border: 1px solid;
+	line-height: 160px;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+}
+
+.error{
+	color: #FFF;
+	font-weight: 300;
+	display: block;
+	margin:auto;
+	text-align: center;
+	position: absolute;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+}
+
+
+
+/* Smartphones (portrait and landscape) ----------- */
+@media only screen and (min-device-width : 320px) and (max-device-width : 480px) {
+/* Styles */
+	.loading>span{font-size: 90%;}
+}
+@media only screen and (min-device-width : 360px) and (max-device-width : 480px) {
+/* Styles */
+	.loading>span{font-size: 90%;}
+}
+
+/* Smartphones (portrait) ----------- */
+@media only screen and (max-width : 320px) {
+/* Styles */
+	.loading>span{font-size: 90%;}
+}
+
+
