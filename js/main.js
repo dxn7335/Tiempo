@@ -31,7 +31,7 @@ app = (function(){
 	var mapURL = 'http://maps.googleapis.com/maps/api/geocode/json?latlng=';
 	//INSTANCE VARS
 	var debugMode;
-
+	var loaded = 0;
 
 	//PUBLIC METHODS
 	function init(){
@@ -56,13 +56,13 @@ app = (function(){
 
 				app.getWeatherData(coords);
 				app.getLocationName(coords);
+
 			}, 
 			function(error){
 				//return false
 				app.view.showError('location');
 			});
 
-		console.log(this.model);
 	}
 
 
@@ -73,6 +73,7 @@ app = (function(){
 			url: weatherURL+location,
 			success: function(xhr){
 				app.model.parseWeatherData(xhr);
+				app.finishedLoading();
 			},
 			error: function(xhr,status,error){
 				app.view.showError('weather');
@@ -88,6 +89,7 @@ app = (function(){
 			url: mapURL+coords,
 			success: function(xhr){
 				app.model.saveLocation(xhr);
+				app.finishedLoading();
 			},
 			error: function(xhr, status, error){
 				app.view.showError('name');
@@ -96,11 +98,23 @@ app = (function(){
 		});
 	}
 
+	//check if both ajax calls have been loaded
+	function finishedLoading(){
+		loaded ++;
+		console.log(loaded);
+		if(loaded == 2){
+			//render current weather screen
+			this.view.renderCurrentWeather( this.model.get('today'), this.model.get('currentWeather') );
+			loaded = 0;
+		}
+	}
+
 	return{
 		init: init,
 		searchLocation: searchLocation,
 		getWeatherData: getWeatherData,
 		getLocationName: getLocationName,
+		finishedLoading: finishedLoading,
 	};
 
 })(); //end app.main
@@ -156,6 +170,10 @@ var model = Backbone.Model.extend({
 		currTemp['C'] = data.temp_C;
 		var currDesc = data.weatherDesc[0].value;
 
+		if(currDesc.indexOf('ice pellets') != -1){
+			currDesc.replace('ice pellets', 'hail');
+		}
+
 		var curr = { temp: currTemp, desc: currDesc };
 		this.set({'currentWeather':curr});
 	},
@@ -166,6 +184,9 @@ var model = Backbone.Model.extend({
 		for(var i=0; i<data.length; i++){
 			var date = data[i].date;
 			var desc = data[i].weatherDesc[0].value;
+			if(desc.indexOf('ice pellets') != -1){
+				desc.replace('ice pellets', 'hail');
+			}
 			var temp = [];
 
 			//average out temperature resullts
@@ -180,6 +201,7 @@ var model = Backbone.Model.extend({
 	},
 
 	saveLocation: function(data){
+		console.log(data);
 		if(data.results[0].address_components[3] != null){
 			var name = data.results[0].address_components[3].long_name;
 		}
@@ -210,6 +232,81 @@ var view = Backbone.View.extend({
 		this.renderSplash();
 	},
 
+	getWeatherIcon: function(description){
+		//search string for keywords and returns icon
+		var description =  description.toLowerCase();
+		var icon;
+
+		//SUNNY
+		if( description.indexOf('sunny') != -1 || description.indexOf('clear') != -1){
+			icon = "wi wi-day-sunny";
+		}
+		//CLOUDY
+		else if ( description.indexOf('cloudy') != -1 || description.indexOf('overcast') != -1){
+
+			if ( description.indexOf('partly') != -1 )
+				icon = "wi wi-day-cloudy";
+			else
+				icon = "wi wi-cloudy";
+
+		}
+		else if (description.indexOf('overcast') != -1){
+			icon = 'wi wi-day-sunny-overcast';
+		}
+		//HAIL
+		else if ( description.indexOf('hail') != -1 ){
+			icon = 'wi wi-hail';
+		}
+		//SLEET
+		else if (description.indexOf('sleet') != -1){
+			icon = 'wi wi-snow-wind';
+		}
+		//RAIN
+		else if (description.indexOf('rain') != -1){
+
+			if (description.indexOf('heavy') != -1 || description.indexof('torrential') != -1)
+				icon = "wi wi-rain";
+
+			else if (description.indexOf('thunder') != -1 )
+				icon = "wi wi-thunderstorm";
+
+			else if (description.indexOf('showers') != -1)
+				icon = 'wi wi-sprinkle';
+
+			else 
+				icon = "wi wi-sprinkle";
+		}
+		//DRIZZLE
+		else if (description.indexOf('drizzle') != -1){
+			icon = "wi wi-sprinkle";
+		}
+		//SNOW
+		else if (description.indexOf('snow')!= -1 || description.indexOf('blizzard') != -1){
+			if (description.indexOf('thunder') != -1)
+				icon = "wi wi-night-snow-thunderstorm"
+			else
+				icon = "wi wi-snow";
+		}
+		//FOG
+		else if (description.indexOf('fog') != -1){
+			icon = 'wi wi-fog';
+		}
+		//MIST
+		else if (description.indexOf('mist') != -1){
+			icon = 'wi wi-fog';
+		}
+		//WINDY
+		else if (description.indexOf('wind') != -1){
+			icon = "wi wi-cloudy-gusts";
+		}
+
+		var iconContent = "<i id='current_icon' class='"+icon+"'></i>";
+
+		return iconContent;
+
+	},
+
+	//Public Methods
 	render: function(){
 		this.renderLoad();
 	},
@@ -227,7 +324,36 @@ var view = Backbone.View.extend({
 		this.$el.append(loading);
 	},
 
-	//Methods
+	renderHeader: function(){
+		//creates header 
+		//has current location searched and other options (temp settings, etc)
+	},
+
+	//renders screen depicting today's weather
+	renderCurrentWeather: function(today, weatherData){
+		//current data
+		var weekday = "<span class='weekday'>"+today.day+"</span>";
+		var date = "<span class='date'>"+ today.month + '.' + today.date + '.' + today.year +"</span>";
+		var currDate = "<div id='current_date'>"+weekday+'<br/>'+date+"</div>";
+
+		var icon = this.getWeatherIcon(weatherData.desc);
+
+		var desc = "<div id='current_desc'><span>"+weatherData.desc+"</span></div>";
+
+		var tempF = "<span class='temp_F'>"+weatherData.temp['F']+"&deg;F</span>";
+		var tempC = "<span class='temp_C'>"+weatherData.temp['C']+"&deg;C</span>";
+		var temp = "<div id='current_temp'>"+tempF+tempC+"</div>";
+
+		var currentWeather = "<div id='weather_current'>"+currDate+icon+desc+temp+"</div>";
+		this.$el.find('.loading').fadeOut(300);
+		this.$el.append(currentWeather);
+	},
+
+	//render screen with 5 day forecast
+	renderWeekForecast: function(data){
+
+	},
+
 	showError: function(type){
 		this.$el.find('.loading').fadeOut();
 		switch(type){
@@ -245,6 +371,7 @@ var view = Backbone.View.extend({
 		var div = "<div class='error'>"+error+"</div>";
 		this.$el.append(div);
 	},
+
 }); //end view
 
 

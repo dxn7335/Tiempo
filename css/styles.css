@@ -11,16 +11,6 @@ html,body{
     background: linear-gradient(to bottom, #f4ad48, #ea274b);
 }
 
-/* Climacons */
-@font-face {
-    font-family:'ClimaconsRegular';
-    src: url('fonts/climacons-webfont.eot');
-    src: url('fonts/climacons-webfont.eot?#iefix') format('embedded-opentype'),
-         url('fonts/climacons-webfont.woff') format('woff'),
-         url('fonts/climacons-webfont.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
-}
 
 @keyframes fadein {
     from { opacity: 0; }
@@ -34,15 +24,38 @@ html,body{
 }
 
 /* Safari, Chrome and Opera > 12.1 */
-@-webkit-keyframes fadein {
-    from { opacity: 0; }
-    to   { opacity: 1; }
+@-webkit-keyframes slidein {
+    from { opacity: 0; margin-left:200%;}
+    to   { opacity: 1; margin-left:0;}
 }
 
 /* Internet Explorer */
-@-ms-keyframes fadein {
-    from { opacity: 0; }
-    to   { opacity: 1; }
+@-ms-keyframes slidein {
+    from { opacity: 0; margin-left:200%;}
+    to   { opacity: 1; margin-left:0;}
+}
+
+@keyframes slidein {
+    from { opacity: 0; margin-left:200%;}
+    to   { opacity: 1; margin-left:0;}
+}
+
+/* Firefox < 16 */
+@-moz-keyframes slidein {
+    from { opacity: 0; margin-left:200%;}
+    to   { opacity: 1; margin-left:0;}
+}
+
+/* Safari, Chrome and Opera > 12.1 */
+@-webkit-keyframes slidein {
+    from { opacity: 0; margin-left:200%;}
+    to   { opacity: 1; margin-left:0;}
+}
+
+/* Internet Explorer */
+@-ms-keyframes slidein {
+    from { opacity: 0; margin-left:200%;}
+    to   { opacity: 1; margin-left:0;}
 }
 
 .splash
@@ -97,6 +110,47 @@ html,body{
 	right: 0;
 }
 
+
+#weather_current{
+	color:#FFF;
+	padding-left:8%;
+	padding-right:8%;
+	-webkit-animation: slidein 1.5s; /* Safari, Chrome and Opera > 12.1 */
+   	-moz-animation: slidein 1.5s; /* Firefox < 16 */
+    -ms-animation: slidein 1.5s; /* Internet Explorer */
+     -o-animation: slidein 1.5s; /* Opera < 12.1 */   
+}
+
+	#current_date{
+		font-weight: 300;
+	}
+	#current_date > .weekday {
+		font-size:130%;
+	}
+	#current_date > .date{
+		font-size:110%;
+	}
+	#current_icon{
+		font-size: 800%;
+		margin-top: 12%;
+		display: block;
+		/* margin: auto; */
+		text-align: center;
+	}
+	#current_desc{
+		font-size: 120%;
+		text-align: center;
+		display: block;
+		font-weight: 300;
+		opacity: 0.8;
+	}
+	#current_temp{
+		display: block;
+		text-align: center;
+		font-size: 140%;
+	}
+
+
 .error{
 	color: #FFF;
 	font-weight: 300;
@@ -108,6 +162,7 @@ html,body{
 	left: 0;
 	bottom: 0;
 	right: 0;
+	height:50px;
 }
 
 
@@ -115,17 +170,23 @@ html,body{
 /* Smartphones (portrait and landscape) ----------- */
 @media only screen and (min-device-width : 320px) and (max-device-width : 480px) {
 /* Styles */
-	.loading>span{font-size: 90%;}
+	body{font-size: 90%;}
+	#current_icon{ font-size: 700%;
+		margin-top: 15%;}
 }
 @media only screen and (min-device-width : 360px) and (max-device-width : 480px) {
 /* Styles */
-	.loading>span{font-size: 90%;}
+	body{font-size: 90%;}
+	#current_icon{ font-size: 700%;
+		margin-top: 15%;}
 }
 
 /* Smartphones (portrait) ----------- */
 @media only screen and (max-width : 320px) {
 /* Styles */
-	.loading>span{font-size: 90%;}
+	body{font-size: 90%;}
+	#current_icon{ font-size: 700%;
+		margin-top: 15%;}
 }
 
 
