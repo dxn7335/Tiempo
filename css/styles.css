@@ -1,7 +1,7 @@
 html,body{
 	padding:0;
 	margin:0;
-	font-family: 'Open sans', 'Avenir','Verdana';
+	font-family: 'Lato', 'Avenir','Verdana';
 	height:100%;
 	background: #f4ad48;
     background: -webkit-gradient(linear, 0 0, 0 100%, from(#f4ad48), to(#ea274b));
@@ -11,18 +11,30 @@ html,body{
     background: linear-gradient(to bottom, #f4ad48, #ea274b);
 }
 
-
+/* FADE IN ANIMATION W/ POP */
 @keyframes fadein {
-    from { opacity: 0; }
-    to   { opacity: 1; }
+    from { opacity: 0; transform: scale(0.5);}
+    to   { opacity: 1; transform: scale(1);}
+}
+
+@-webkit-keyframes fadein {
+    from { opacity: 0; -webkit-transform: scale(0.5);}
+    to   { opacity: 1; -webkit-transform: scale(1);}
 }
 
 /* Firefox < 16 */
 @-moz-keyframes fadein {
-    from { opacity: 0; }
-    to   { opacity: 1; }
+    from { opacity: 0; -moz-transform: scale(0.5);}
+    to   { opacity: 1; -moz-transform: scale(1);}
+}
+/* Internet Explorer */
+@-ms-keyframes fadein {
+    from { opacity: 0; -ms-transform: scale(0.5);}
+    to   { opacity: 1; -ms-transform: scale(1);}
 }
 
+
+/* SLIDE IN ANIMATION */
 /* Safari, Chrome and Opera > 12.1 */
 @-webkit-keyframes slidein {
     from { opacity: 0; margin-left:200%;}
@@ -46,16 +58,52 @@ html,body{
     to   { opacity: 1; margin-left:0;}
 }
 
-/* Safari, Chrome and Opera > 12.1 */
-@-webkit-keyframes slidein {
-    from { opacity: 0; margin-left:200%;}
-    to   { opacity: 1; margin-left:0;}
+
+/* MAIN BODY /////////////////////////////////////////////////////*/
+#tiempo{
+	display:block;
+	width:100%;
+	height: 100%;
+	min-height:480px;
+	transition: background ease-in-out 1.5s;
+	-webkit-transition: background ease-in-out 1.5s;
+	-moz-transition: background ease-in-out 1.5s;
+	-ms-transition: background ease-in-out 1.5s;
 }
 
-/* Internet Explorer */
-@-ms-keyframes slidein {
-    from { opacity: 0; margin-left:200%;}
-    to   { opacity: 1; margin-left:0;}
+#tiempo.initial{
+}
+/* Temperature Level Indication from background color */
+#tiempo.low{
+	background: #3EAFFA;
+/*	background: -webkit-linear-gradient(to bottom, #3EAFFA, #0042CF);
+	background: -moz-linear-gradient(to bottom, #3EAFFA, #0042CF);
+	background: -ms-linear-gradient(to bottom, #3EAFFA, #0042CF);
+	background: linear-gradient(to bottom, #3EAFFA, #0042CF); */
+}
+#tiempo.midlow{
+	background: #0073F0;
+}
+#tiempo.mid{
+	background: #FFCC2C;
+/*	background: -webkit-linear-gradient(to bottom, #FFD600, #FF9900);
+	background: -moz-linear-gradient(to bottom, #FFD600, #FF9900);
+	background: -ms-linear-gradient(to bottom, #FFD600, #FF9900);
+	background: linear-gradient(to bottom, #FFD600, #FF9900); */
+}
+#tiempo.midhigh{
+	background: #FD702E;
+/*	background: -webkit-linear-gradient(to top, #FF662A, #F5951A);
+	background: -moz-linear-gradient(to top, #FF662A, #F5951A);
+	background: -ms-linear-gradient(to top, #FF662A, #F5951A);
+	background: linear-gradient(to top, #FF662A, #F5951A); */
+}
+#tiempo.high{
+	background: #FF374F;
+/*	background: -webkit-linear-gradient(to bottom, #ea274b, #FF3838);
+	background: -moz-linear-gradient(to bottom, #ea274b, #FF3838);
+	background: -ms-linear-gradient(to bottom, #ea274b, #FF3838);
+	background: linear-gradient(to bottom, #ea274b, #FF3838); */
 }
 
 .splash
@@ -82,10 +130,7 @@ html,body{
 }
 
 .loading{
-	-webkit-animation: fadein 1.5s; /* Safari, Chrome and Opera > 12.1 */
-   	-moz-animation: fadein 1.5s; /* Firefox < 16 */
-    -ms-animation: fadein 1.5s; /* Internet Explorer */
-     -o-animation: fadein 1.5s; /* Opera < 12.1 */   
+	  
 }
 .loading > span{
 	color: #FFF;
@@ -108,49 +153,19 @@ html,body{
 	left: 0;
 	bottom: 0;
 	right: 0;
+	-webkit-animation: fadein 0.5s; /* Safari, Chrome and Opera > 12.1 */
+   	-moz-animation: fadein 0.5s; /* Firefox < 16 */
+    -ms-animation: fadein 0.5s; /* Internet Explorer */
+     -o-animation: fadein 0.5s; /* Opera < 12.1 */ 
 }
 
-
-#weather_current{
-	color:#FFF;
-	padding-left:8%;
-	padding-right:8%;
-	-webkit-animation: slidein 1.5s; /* Safari, Chrome and Opera > 12.1 */
-   	-moz-animation: slidein 1.5s; /* Firefox < 16 */
-    -ms-animation: slidein 1.5s; /* Internet Explorer */
-     -o-animation: slidein 1.5s; /* Opera < 12.1 */   
+/* GLOBAL */
+.temp{
+	-webkit-animation: fadein 0.7s; /* Safari, Chrome and Opera > 12.1 */
+   	-moz-animation: fadein 0.7s; /* Firefox < 16 */
+    -ms-animation: fadein 0.7s; /* Internet Explorer */
+     -o-animation: fadein 0.7s; /* Opera < 12.1 */
 }
-
-	#current_date{
-		font-weight: 300;
-	}
-	#current_date > .weekday {
-		font-size:130%;
-	}
-	#current_date > .date{
-		font-size:110%;
-	}
-	#current_icon{
-		font-size: 800%;
-		margin-top: 12%;
-		display: block;
-		/* margin: auto; */
-		text-align: center;
-	}
-	#current_desc{
-		font-size: 120%;
-		text-align: center;
-		display: block;
-		font-weight: 300;
-		opacity: 0.8;
-	}
-	#current_temp{
-		display: block;
-		text-align: center;
-		font-size: 140%;
-	}
-
-
 .error{
 	color: #FFF;
 	font-weight: 300;
@@ -166,27 +181,176 @@ html,body{
 }
 
 
+/* HEADER ////////////////////////////////////////////////////////////////////*/
+#tiempo_header{
+	display: block;
+	color: #FFF;
+	margin-bottom: 3%;
+	min-height: 50px;
+}
+/* TOP --- includes Location and temperature unit toggle */
+#tiempo_header_top{
+	padding-top: 30px;
+	padding-bottom: 10px;
+	padding-right: 8%;
+	padding-left: 6%;
+	background: rgba(255, 255, 255, 0.12);
+}
+
+#header_location{
+	display: inline-block;
+	width: 45%;
+	max-width: 200px;
+	/* background: rgba(0,0,0,0.15); */
+	padding: 2px;
+	/* padding-left: 1%; */
+	/* border-radius: 8px; */
+	font-weight: 700;
+	font-size: 135%;
+}
+#header_toggle{
+	display: inline-block;
+	float: right;
+	/* padding: 10px; */
+	border: 1px solid #fFF;
+	overflow: hidden;
+}
+.temp_toggle{
+	padding: 10px;
+}
+	.temp_toggle.checked{
+		background:#FFF;
+		color:#f4ad48;
+	}
+#header_toggle > #F{
+	border-right: 1px solid #fff;
+}
+
+/* Bottom --  includes views toggle */
+#tiempo_header_bottom{
+	display:block;
+	width: 100%;
+}
+.view_toggle{
+	display:block;
+	width: 50%;
+	padding: 2% 0;
+	text-align: center;
+	font-size: 120%;
+}
+.view_toggle.checked{
+	background: rgba(255, 255, 255, 0.9);
+	color: #f4ad48;
+}
+
+
+
+
+
+/* CURRENT WEATHER VIEW /////////////////////////////////////////////////////////////////*/
+#weather_current{
+	color:#FFF;
+	padding-left:8%;
+	padding-right:8%;
+	-webkit-animation: fadein 0.5s; /* Safari, Chrome and Opera > 12.1 */
+   	-moz-animation: fadein 0.5s; /* Firefox < 16 */
+    -ms-animation: fadein 0.5s; /* Internet Explorer */
+     -o-animation: fadein 0.5s; /* Opera < 12.1 */    
+}
+
+	#current_date{
+		font-weight: 300;
+	}
+	#current_date > .weekday {
+		font-size:110%;
+	}
+	#current_icon{
+		font-size: 800%;
+		margin-top: 12%;
+		margin-bottom:3%;
+		display: block;
+		/* margin: auto; */
+		text-align: center;
+		-webkit-animation: fadein 0.7s; /* Safari, Chrome and Opera > 12.1 */
+	   	-moz-animation: fadein 0.7s; /* Firefox < 16 */
+	    -ms-animation: fadein 0.7s; /* Internet Explorer */
+	     -o-animation: fadein 0.7s; /* Opera < 12.1 */ 
+	}
+	#current_desc{
+		font-size: 135%;
+		text-align: center;
+		display: block;
+		font-weight: 300;
+		opacity: 0.75;
+	}
+	#current_temp{
+		display: block;
+		text-align: center;
+		font-size: 190%; 
+	}
+
+
+
+
 
 /* Smartphones (portrait and landscape) ----------- */
 @media only screen and (min-device-width : 320px) and (max-device-width : 480px) {
 /* Styles */
-	body{font-size: 90%;}
-	#current_icon{ font-size: 700%;
-		margin-top: 15%;}
+	body{font-size: 70%;}
+	#current_icon{ font-size: 900%; margin-top: 15%; margin-bottom:5%;}
+	#header_location{margin-left:10px;}
+	#tiempo_header{margin-bottom:8%;}
+	#tiempo_header_top{padding-left: 4%; padding-top:20px; padding-bottom:10px;}
 }
+
+/* Iphone 5 ----------- */
+@media only screen and (min-device-width : 320px) and (max-device-width : 568px) {
+/* Styles */
+	body{font-size: 90%;}
+	#current_icon{ font-size: 800%; margin-top: 15%; margin-bottom:5%;}
+	#header_location{margin-left:10px;}
+	#tiempo_header{margin-bottom:12%;}
+	#tiempo_header_top{padding-left: 4%;}
+}
+
 @media only screen and (min-device-width : 360px) and (max-device-width : 480px) {
 /* Styles */
 	body{font-size: 90%;}
-	#current_icon{ font-size: 700%;
-		margin-top: 15%;}
+	#current_icon{ font-size: 900%; margin-top: 15%; margin-bottom:5%;}
+	#header_location{margin-left:10px;}
+	#tiempo_header{margin-bottom:12%;}
+	#tiempo_header_top{padding-left: 4%;}
+}
+
+@media only screen and (max-width : 540px) and (max-device-width: 960px){
+/* Styles */
+	body{font-size: 125%;}
+	#current_icon{ font-size: 900%; margin-top: 15%; margin-bottom:5%;}
+	#header_location{margin-left:10px;}
+	#tiempo_header{margin-bottom:12%;}
+	#tiempo_header_top{padding-left: 4%;}
+	.loading > span{width:195px; height:195px; line-height:195px;}
+}
+
+@media only screen and (max-width : 360px) and (max-device-width: 640px){
+/* Styles */
+	body{font-size: 90%;}
+	#current_icon{ font-size: 800%; margin-top: 15%; margin-bottom:5%;}
+	#header_location{margin-left:10px;}
+	#tiempo_header{margin-bottom:12%;}
+	#tiempo_header_top{padding-left: 4%;}
 }
 
 /* Smartphones (portrait) ----------- */
-@media only screen and (max-width : 320px) {
+@media only screen and (max-width : 320px) and (portrait:landscape){
 /* Styles */
 	body{font-size: 90%;}
-	#current_icon{ font-size: 700%;
-		margin-top: 15%;}
+	#current_icon{ font-size: 950%; margin-top: 15%; margin-bottom:5%;}
+	#header_location{margin-left:10px;}
+	#tiempo_header{margin-bottom:10%;}
+	#tiempo_header_top{padding-left: 4%;}
 }
+
+
 
 
