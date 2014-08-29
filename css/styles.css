@@ -65,10 +65,10 @@ html,body{
 	width:100%;
 	height: 100%;
 	min-height:480px;
-	transition: background ease-in-out 1.5s;
-	-webkit-transition: background ease-in-out 1.5s;
-	-moz-transition: background ease-in-out 1.5s;
-	-ms-transition: background ease-in-out 1.5s;
+	transition: background ease-in-out 1.75s;
+	-webkit-transition: background ease-in-out 1.75s;
+	-moz-transition: background ease-in-out 1.75s;
+	-ms-transition: background ease-in-out 1.75s;
 }
 
 #tiempo.initial{
@@ -194,7 +194,7 @@ html,body{
 	padding-bottom: 10px;
 	padding-right: 8%;
 	padding-left: 6%;
-	background: rgba(255, 255, 255, 0.12);
+	background: rgba(255, 255, 255, 0.05);
 }
 
 #header_location{
@@ -206,7 +206,7 @@ html,body{
 	/* padding-left: 1%; */
 	/* border-radius: 8px; */
 	font-weight: 700;
-	font-size: 135%;
+	font-size: 130%;
 }
 #header_toggle{
 	display: inline-block;
@@ -214,6 +214,8 @@ html,body{
 	/* padding: 10px; */
 	border: 1px solid #fFF;
 	overflow: hidden;
+	margin-top:4px;
+	vertical-align: middle;
 }
 .temp_toggle{
 	padding: 10px;
@@ -234,7 +236,7 @@ html,body{
 .view_toggle{
 	display:block;
 	width: 50%;
-	padding: 2% 0;
+	padding: 0.7% 0;
 	text-align: center;
 	font-size: 120%;
 }
@@ -262,7 +264,10 @@ html,body{
 		font-weight: 300;
 	}
 	#current_date > .weekday {
-		font-size:110%;
+		font-size:120%;
+	}
+	#current_date > .date{
+		font-size:85%;
 	}
 	#current_icon{
 		font-size: 800%;
@@ -297,58 +302,64 @@ html,body{
 @media only screen and (min-device-width : 320px) and (max-device-width : 480px) {
 /* Styles */
 	body{font-size: 70%;}
-	#current_icon{ font-size: 900%; margin-top: 15%; margin-bottom:5%;}
+	#current_icon{ font-size: 900%; margin-top: 13%; margin-bottom:5%;}
 	#header_location{margin-left:10px;}
 	#tiempo_header{margin-bottom:8%;}
 	#tiempo_header_top{padding-left: 4%; padding-top:20px; padding-bottom:10px;}
+	.view_toggle{padding: 2% 0;}
 }
 
 /* Iphone 5 ----------- */
 @media only screen and (min-device-width : 320px) and (max-device-width : 568px) {
 /* Styles */
 	body{font-size: 90%;}
-	#current_icon{ font-size: 800%; margin-top: 15%; margin-bottom:5%;}
+	#current_icon{ font-size: 800%; margin-top: 13%; margin-bottom:5%;}
 	#header_location{margin-left:10px;}
 	#tiempo_header{margin-bottom:12%;}
 	#tiempo_header_top{padding-left: 4%;}
+	.view_toggle{padding: 2% 0;}
 }
 
 @media only screen and (min-device-width : 360px) and (max-device-width : 480px) {
 /* Styles */
 	body{font-size: 90%;}
-	#current_icon{ font-size: 900%; margin-top: 15%; margin-bottom:5%;}
+	#current_icon{ font-size: 900%; margin-top: 13%; margin-bottom:5%;}
 	#header_location{margin-left:10px;}
 	#tiempo_header{margin-bottom:12%;}
 	#tiempo_header_top{padding-left: 4%;}
+	.view_toggle{padding: 2% 0;}
 }
 
 @media only screen and (max-width : 540px) and (max-device-width: 960px){
 /* Styles */
 	body{font-size: 125%;}
-	#current_icon{ font-size: 900%; margin-top: 15%; margin-bottom:5%;}
+	#current_icon{ font-size: 900%; margin-top: 13%; margin-bottom:5%;}
 	#header_location{margin-left:10px;}
 	#tiempo_header{margin-bottom:12%;}
 	#tiempo_header_top{padding-left: 4%;}
 	.loading > span{width:195px; height:195px; line-height:195px;}
+	.view_toggle{padding: 2% 0;}
 }
 
 @media only screen and (max-width : 360px) and (max-device-width: 640px){
 /* Styles */
 	body{font-size: 90%;}
-	#current_icon{ font-size: 800%; margin-top: 15%; margin-bottom:5%;}
+	#current_icon{ font-size: 800%; margin-top: 13%; margin-bottom:5%;}
 	#header_location{margin-left:10px;}
 	#tiempo_header{margin-bottom:12%;}
 	#tiempo_header_top{padding-left: 4%;}
+	.view_toggle{padding: 2% 0;}
 }
 
 /* Smartphones (portrait) ----------- */
 @media only screen and (max-width : 320px) and (portrait:landscape){
 /* Styles */
 	body{font-size: 90%;}
-	#current_icon{ font-size: 950%; margin-top: 15%; margin-bottom:5%;}
+	#current_icon{ font-size: 950%; margin-top: 13%; margin-bottom:5%;}
 	#header_location{margin-left:10px;}
 	#tiempo_header{margin-bottom:10%;}
 	#tiempo_header_top{padding-left: 4%;}
+	.view_toggle{padding: 2% 0;}
 }
 
 
