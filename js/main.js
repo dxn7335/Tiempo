@@ -27,7 +27,7 @@ var app = {};
 
 app = (function(){
 	//CONSTANTS
-	var weatherURL = 'http://api.worldweatheronline.com/free/v1/weather.ashx?key=94166457dc9f7e711a7a84729364ed9af9c82fdc&format=json&num_of_days=5&q='
+	var weatherURL = 'http://api.worldweatheronline.com/free/v1/weather.ashx?key=94166457dc9f7e711a7a84729364ed9af9c82fdc&format=json&num_of_days=7&q='
 	var mapURL = 'http://maps.googleapis.com/maps/api/geocode/json?latlng=';
 	//INSTANCE VARS
 	var debugMode;
@@ -105,7 +105,6 @@ app = (function(){
 	//check if both ajax calls have been loaded
 	function finishedLoading(){
 		loaded ++;
-		console.log(loaded);
 		if(loaded == 2){
 			//create header
 			this.header = new headerView;
@@ -198,7 +197,6 @@ var model = Backbone.Model.extend({
 	},
 
 	saveWeeklyForecast: function(data){
-		console.log(data);
 		var forecast = [];
 		for(var i=0; i<data.length; i++){
 			var date = data[i].date;
@@ -273,8 +271,7 @@ var mainView = Backbone.View.extend({
 	render: function(){
 		//starts with splash screen
 		var splash = "<div class='splash'></div>";
-		this.$el.append(splash);
-		return this;
+		return this.$el.append(splash);
 	},
 
 	renderLoad: function(){
@@ -282,7 +279,7 @@ var mainView = Backbone.View.extend({
 
 		var message = "<span>Finding Your Location</span>";
 		var loading = "<div class='loading'>"+message+"</div>";
-		this.$el.append(loading);
+		return this.$el.append(loading);
 	},
 
 	toggleTemp: function(unit){
