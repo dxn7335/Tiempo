@@ -66,10 +66,10 @@ html,body{
 	height: 100%;
 	overflow:hidden;
 	min-height:480px;
-	transition: background ease-in-out 2s;
-	-webkit-transition: background ease-in-out 2s;
-	-moz-transition: background ease-in-out 2s;
-	-ms-transition: background ease-in-out 2s;
+	transition: background ease-in-out 1.6s;
+	-webkit-transition: background ease-in-out 1.6s;
+	-moz-transition: background ease-in-out 1.6s;
+	-ms-transition: background ease-in-out 1.6s;
 }
 
 #tiempo.initial{
@@ -217,6 +217,7 @@ html,body{
 	overflow: hidden;
 	margin-top:4px;
 	vertical-align: middle;
+	display: none;
 }
 .temp_toggle{
 	padding: 10px;
@@ -227,6 +228,31 @@ html,body{
 	}
 #header_toggle > #F{
 	border-right: 1px solid #fff;
+}
+
+#tiempo_refresh{
+	display: inline-block;
+	float: right;
+	font-size: 130%;
+	vertical-align: middle;
+	margin-right: 3%;
+	border: 1px solid rgba(255,255,255,0.5);
+	border-radius: 45px;
+	padding: 1% 2.25%;
+	margin-top: -4px;
+}
+	.refresh-clicked{
+		opacity:0.3;
+	}
+
+#tiempo_settings{
+	float: right;
+	display: inline-block;
+	font-size: 150%;
+	margin-top: -4px;
+	border: 1px solid rgba(255,255,255,0.5);
+	border-radius: 45px;
+	padding: .5% 2% .25%;
 }
 
 /* Bottom --  includes views toggle */

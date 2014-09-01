@@ -15,8 +15,37 @@ $(function(){
 	if(visited){
 		app.visited = true;
 	}
+
+	var isMobile = {
+	    Android: function() {
+	        return navigator.userAgent.match(/Android/i);
+	    },
+	    BlackBerry: function() {
+	        return navigator.userAgent.match(/BlackBerry/i);
+	    },
+	    iOS: function() {
+	        return navigator.userAgent.match(/iPhone|iPad|iPod/i);
+	    },
+	    Opera: function() {
+	        return navigator.userAgent.match(/Opera Mini/i);
+	    },
+	    Windows: function() {
+	        return navigator.userAgent.match(/IEMobile/i);
+	    },
+	    any: function() {
+	        return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows());
+	    }
+	};
+
+	if( isMobile.any() ){
+		// Initialize App
+		app.init();
+	}
+	else{
+		alert('desktop');
+	}
 	// Initialize App
-	app.init();
+	//app.init();
 	//
 
 });
@@ -117,16 +146,28 @@ app = (function(){
 	function finishedLoading(){
 		loaded ++;
 		if(loaded == 2){
-			//create header
-			this.header = new headerView;
+			//create header if none exists
+			if(!this.header)
+				this.header = new headerView;
 			//render current weather screen
-			console.log(this.model.get('forecast'));
 			this.view.renderViews( this.model.get('today'), this.model.get('currentWeather'),  this.model.get('forecast'));
+			
 			loaded = 0;
 		}
 		else{
 			this.view.updateMessage();
 		}
+	}
+
+	//Refreshing/updating Weather information in model and then re-rendering view
+	function refreshWeather(){
+		console.log('update');
+		this.view.refreshView();
+		
+		setTimeout(function(){
+			app.searchLocation();
+			app.header.updateHeaderView();
+		}, 400);
 	}
 
 	return{
@@ -135,6 +176,7 @@ app = (function(){
 		getWeatherData: getWeatherData,
 		getLocationName: getLocationName,
 		finishedLoading: finishedLoading,
+		refreshWeather: refreshWeather,
 	};
 
 })(); //end app.main
@@ -249,7 +291,6 @@ var model = Backbone.Model.extend({
 	},
 
 	saveLocation: function(data){
-		console.log(data);
 		if(data.results[0].address_components[3] != null){
 			var name = data.results[0].address_components[3].long_name;
 		}
@@ -315,8 +356,13 @@ var mainView = Backbone.View.extend({
 	},
 
 	renderViews: function(today, currentData, listData){
-		this.renderCurrentWeather(today,currentData,listData);
-		this.renderListWeather(listData);
+		var currentView = this.buildCurrentWeather(today,currentData,listData);
+		var listView = this.buildListWeather(listData);
+
+		//clear loading
+		this.$el.find('.loading').fadeOut(300);
+		//add views
+		this.$el.append(currentView+listView);
 
 		//updates screen settings and visuals
 		this.toggleTemp(app.model.get('tempSetting'));
@@ -362,7 +408,7 @@ var mainView = Backbone.View.extend({
 
 	/* CURRENT WEATHER */
 	//renders screen depicting today's weather
-	renderCurrentWeather: function(today, weatherData, weekForecast){
+	buildCurrentWeather: function(today, weatherData, weekForecast){
 		//current data
 		var weekday = "<span class='weekday'>"+today.day+"</span>";
 		var date = "<span class='date'>"+ today.month + '.' + today.date + '.' + today.year +"</span>";
@@ -377,15 +423,14 @@ var mainView = Backbone.View.extend({
 		var temp = "<div id='current_temp'>"+tempF+tempC+"</div>";
 
 		//weather of current 5 days on bottom of screen
-		var bottom = this.renderBottomDailyWeather(weekForecast);
+		var bottom = this.buildBottomDailyWeather(weekForecast);
 
 		var currentWeather = "<div id='weather_current'>"+currDate+icon+desc+temp+bottom+"</div>";
-		this.$el.find('.loading').fadeOut(300);
-		this.$el.append(currentWeather);
+		return currentWeather;
 	},
 
 		//bottom daily weather section for current weather view
-		renderBottomDailyWeather: function(weekForecast){
+		buildBottomDailyWeather: function(weekForecast){
 			var bottom = "<div id='bottom_daily'>";
 
 			for(var i=1; i<weekForecast.length; i++){
@@ -410,12 +455,12 @@ var mainView = Backbone.View.extend({
 
 	/* LIST FORECAST VIEW */
 	//render screen with 5 day forecast
-	renderListWeather: function(data){
+	buildListWeather: function(data){
 		var list = "<div id='weather_list'>";
 		for(var i=0; i<data.length; i++){
 			var day = "<span class='day'>"+data[i].date.day+"</span>";
 			var desc = "<span class='list_desc'>"+data[i].desc+"</span>";
-			console.log(data[i].desc);
+
 			var left = "<div class='list_left'>"+day+desc+"</div>";
 			var tempF = "<span class='temp temp_F'>"+data[i].temp['maxF']+"&deg;F / "+data[i].temp['minF']+"&deg;F"+"</span>";
 			var tempC = "<span class='temp temp_C'>"+data[i].temp['maxC']+"&deg;C / "+data[i].temp['minC']+"&deg;C"+"</span>";
@@ -430,8 +475,19 @@ var mainView = Backbone.View.extend({
 		}
 
 		list = list +"</div>";
-		return this.$el.append(list);
+		return list;
 	},
+
+
+	//REFRESHING VIEW
+	refreshView: function(){
+		this.$el.removeClass();
+
+		this.$el.find('#weather_current').remove();
+		this.$el.find('#weather_list').remove();
+		this.render();
+	},
+
 
 	//HELPER Functions
 	getWeatherIcon: function(description){
@@ -576,11 +632,13 @@ var headerView = Backbone.View.extend({
 		
 		_.bindAll(this, 'render');
 		this.render();
-		this.initializeSettings();
+		this.setSettings();
+		this.setUIListeners();
 		
 	},
 	render: function(){
-		//creates header 
+		//creates header
+		var settings = "<span id='tiempo_settings'><i class='fa fa-cog'></i></span>";
 		//has current location searched and other options (temp settings, etc)
 		var currentLocation = "<div id='header_location'>"+this.location+"</div>";
 
@@ -589,27 +647,22 @@ var headerView = Backbone.View.extend({
 		var C_toggle = "<span id='C' class='temp_toggle'>&deg;C</span>";
 		var tempToggle = "<div id='header_toggle'>"+F_toggle+C_toggle+"</div>";
 
+		//refresh button
+		var refresh = "<span id='tiempo_refresh'><i class='fa fa-refresh'></i></span>";
+
 		//view toggle (under)
-		var viewToggle = this.renderViewToggle();
+		var viewToggle = this.buildViewToggle();
 
 		//top portion of header
-		var top = "<div id='tiempo_header_top'>"+currentLocation+tempToggle+"</div>";
+		//var top = "<div id='tiempo_header_top'>"+menubtn+currentLocation+tempToggle+refresh+"</div>";
+		var top = "<div id='tiempo_header_top'>"+currentLocation+settings+refresh+"</div>";
 		var bottom = "<div id='tiempo_header_bottom'>"+viewToggle+"</div>";
 		var header = "<div id='tiempo_header'>"+top+bottom+"</div>";
 		
 		return this.$el.append(header);
 	},
 
-	initializeSettings: function(){
-		//check settings on start
-		this.updateSettingsOnRender();
-
-		//Listeners for individual functions
-		this.$el.find('.temp_toggle').on('touchstart click', this.onTempSettingClick);
-		this.$el.find('.view_toggle').on('touchstart click', this.onViewSettingClick);
-	},
-
-	renderViewToggle: function(){
+	buildViewToggle: function(){
 		var currentView = '<i id="current" class="view_toggle fa fa-square-o"></i>';
 		var weekView = '<i id="list" class="view_toggle fa fa-list-ul"></i>';
 
@@ -617,23 +670,45 @@ var headerView = Backbone.View.extend({
 		return viewToggle;
 	},
 
+	updateHeaderView: function(){
+		this.location = app.model.get('currentlocation');
+		//removed clicked setting on refresh button
+		setTimeout(function(){app.header.$el.find('#tiempo_refresh').removeClass('refresh-clicked');},3500);
+		//refresh header settings
+		this.setSettings();
+		return this.$el.find('#header_location').html(this.location);
+	},
+
+	setUIListeners: function(){
+		//Listeners for individual functions
+		this.$el.find('.temp_toggle').on('touchstart click', this.onTempSettingClick);
+		this.$el.find('.view_toggle').on('touchstart click', this.onViewSettingClick);
+		this.$el.find('#tiempo_refresh').on('touchstart click', this.onRefreshClick);
+	},
+
+
 	//checks app's tempSettings and view Settings and marks the appropriate ones
-	updateSettingsOnRender: function(){
+	setSettings: function(){
 		//temperature
 		if(this.tempSetting == 'F')
 			this.$el.find('#F').addClass('checked');
 		else
 			this.$el.find('#C').addClass('checked');
 
-		//view
-		if(this.viewSetting == 'current')
+		//view settings
+		if(this.viewSetting == 'current'){
 			this.$el.find('#current').addClass('checked');
-		else
+			this.$el.find('#week').removeClass('checked');
+		}
+		else{
 			this.$el.find('#week').addClass('checked');
+			this.$el.find('#current').removeClass('checked');
+		}
 	},
 
-	/* Callback functions for individual elements */
 
+	/* Callback functions for Clickable individual elements */
+	/////////////////////////////////////////////////////////
 	//on click of temperature toggle item
 	onTempSettingClick: function(e){
 		e.stopImmediatePropagation();
@@ -654,9 +729,21 @@ var headerView = Backbone.View.extend({
 		app.model.updateViewSetting(this.id);
 	},
 
+
+	onRefreshClick: function(e){
+		e.stopImmediatePropagation();
+		if( $(this).hasClass('refresh-clicked') == false ){
+			$(this).addClass('refresh-clicked');
+			app.refreshWeather();
+		}
+	}
+
 }) //end header view
 
+/* SETTINGS MENU VIEW */
+var settingView = Backbone.View.extend({
 
+});
 
 /* FIRST TIME VISITOR VIEW */
 var firstTimeView = Backbone.View.extend({
@@ -670,12 +757,9 @@ var firstTimeView = Backbone.View.extend({
 	},
 
 	render: function(){
-		var welcome = "<div><span>Welcome to Tiempo!</span><span>This must be your first time.</span></div>";
-		var about = "<div><span>Tiempo is a weather web app</span><span>built by Danny Nguyen</span></div>";
-		var startbutton = "<span id='launch_btn'>Launch Tiempo</span>";
-		var usage = "<div><span>Be sure to allow for location services for best results</span>"+startbutton+"</div>";
+		var text = "<span>Welcome! This must be your first time!</span>You can add this app to your homescreen for faster access!";
 
-		var firstTime = "<div id='firstTime'>"+welcome+about+usage+"</div>";
+		var firstTime = "<div id='firstTime'>"+text+"</div>";
 
 		return this.$el.append(firstTime);
 
