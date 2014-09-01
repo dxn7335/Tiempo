@@ -11,9 +11,9 @@ $(function(){
 
 	//Local storage vars
 	//For debugging option
-	var debug = window.localStorage.getItem('debugOn');
-	if(debug){
-		app.debugMode = true;
+	var visited = window.localStorage.getItem('visited');
+	if(visited){
+		app.visited = true;
 	}
 	// Initialize App
 	app.init();
@@ -27,11 +27,12 @@ var app = {};
 
 app = (function(){
 	//CONSTANTS
-	var weatherURL = 'http://api.worldweatheronline.com/free/v1/weather.ashx?key=94166457dc9f7e711a7a84729364ed9af9c82fdc&format=json&num_of_days=7&q='
+	var weatherURL = 'http://api.worldweatheronline.com/free/v1/weather.ashx?key=94166457dc9f7e711a7a84729364ed9af9c82fdc&format=json&num_of_days=5&q='
 	var mapURL = 'http://maps.googleapis.com/maps/api/geocode/json?latlng=';
 	//INSTANCE VARS
 	var debugMode;
 	var loaded = 0;
+	var visited = false;
 
 	//PUBLIC METHODS
 	function init(){
@@ -43,7 +44,17 @@ app = (function(){
 		this.model = new model;
 		this.view = new mainView;
 		
-		setTimeout(function(){app.searchLocation()},1300);
+		/*
+		if(this.visited)
+			setTimeout(function(){app.searchLocation()},1100);
+		else{
+			setTimeout(function(){
+				app.view.pauseload();
+				app.firstTimeView = new firstTimeView;
+			},1100);
+		}
+		*/
+		setTimeout(function(){app.searchLocation()},1200);
 	}
 
 	//gets user's current location
@@ -109,7 +120,8 @@ app = (function(){
 			//create header
 			this.header = new headerView;
 			//render current weather screen
-			this.view.renderCurrentWeather( this.model.get('today'), this.model.get('currentWeather') );
+			console.log(this.model.get('forecast'));
+			this.view.renderViews( this.model.get('today'), this.model.get('currentWeather'),  this.model.get('forecast'));
 			loaded = 0;
 		}
 		else{
@@ -143,9 +155,7 @@ var model = Backbone.Model.extend({
 		if(!tempUnit)
 			tempUnit = "F";
 
-		var viewSet = window.localStorage.getItem('viewSetting');
-		if(!viewSet)
-			viewSet = "current";
+		var viewSet = "current";
 
 		/*	var locations = window.localStorage.getItem('locations');
 		if(locations)
@@ -199,20 +209,41 @@ var model = Backbone.Model.extend({
 	saveWeeklyForecast: function(data){
 		var forecast = [];
 		for(var i=0; i<data.length; i++){
-			var date = data[i].date;
+			var dateString = data[i].date;
+			dateString = dateString.replace(/-/g, "/");
+			//date is given in year-month-day format;
+			// date (year, month, day);
+			var d = new Date(dateString);
+			var day = this.weekday[d.getDay()];
+			var month = this.months[d.getMonth()];
+			var numdate = d.getDate();
+			var year = d.getFullYear();
+			var fulldate =  month+"."+numdate+"."+year;
+
+			var date = {day: day, full: fulldate};
+
 			var desc = data[i].weatherDesc[0].value;
 			if(desc.indexOf('ice pellets') != -1){
 				desc.replace('ice pellets', 'hail');
 			}
 			var temp = [];
 
-			//average out temperature resullts
-			temp['F'] = data[i].tempMaxF + '/' + data[i].tempMinF;
-			temp['C'] = data[i].tempMaxC + '/' + data[i].tempMinC;
+			//average out temperature results
+			var averageF = Math.round((parseInt(data[i].tempMaxF) + parseInt(data[i].tempMinF)) / 2);
+			temp['averageF'] = averageF;
+			var averageC = Math.round((parseInt(data[i].tempMaxC) + parseInt(data[i].tempMinC)) / 2);
+			temp['averageC'] = averageC;
 
-			var weather = { date: date, desc: desc, temp: temp};
+			//regular temp
+			temp['maxF'] = data[i].tempMaxF;
+			temp['minF'] = data[i].tempMinF;
+			temp['maxC'] = data[i].tempMaxC;
+			temp['minC'] = data[i].tempMinC;
+
+			var weather = { date: date, desc: desc, temp: temp,};
 			forecast.push(weather);
 		}
+
 
 		this.set({'forecast':forecast});
 	},
@@ -268,6 +299,7 @@ var mainView = Backbone.View.extend({
 
 
 	//Public Methods
+	//initial load
 	render: function(){
 		//starts with splash screen
 		var splash = "<div class='splash'></div>";
@@ -280,6 +312,16 @@ var mainView = Backbone.View.extend({
 		var message = "<span>Finding Your Location</span>";
 		var loading = "<div class='loading'>"+message+"</div>";
 		return this.$el.append(loading);
+	},
+
+	renderViews: function(today, currentData, listData){
+		this.renderCurrentWeather(today,currentData,listData);
+		this.renderListWeather(listData);
+
+		//updates screen settings and visuals
+		this.toggleTemp(app.model.get('tempSetting'));
+		this.toggleView('current');
+		this.changeColor(currentData.temp['F']);
 	},
 
 	toggleTemp: function(unit){
@@ -299,25 +341,36 @@ var mainView = Backbone.View.extend({
 	toggleView: function(view){
 		//toggles what unit of temp is shown 
 		switch(view){
-			case 'F':
-				this.$el.find('.temp_C').hide();
-				this.$el.find('.temp_F').fadeIn(200);
+			case 'current':
+				this.$el.find('#weather_list').hide();
+				this.$el.find('.list_day').hide();
+				this.$el.find('#weather_current').show();
 				break;
-			case 'C':
-				this.$el.find('.temp_F').hide();
-				this.$el.find('.temp_C').fadeIn(200);
+			case 'list':
+				this.$el.find('#weather_current').hide();
+				this.$el.find('#weather_list').show();
+				
+				setTimeout(function(){
+					$(".list_day").each(function(index) {
+					    $(this).delay(150*index).fadeIn(400);
+					});
+				}, 300);
 				break;
 		}
 	},
 
+
+	// Private
+
+	/* CURRENT WEATHER */
 	//renders screen depicting today's weather
-	renderCurrentWeather: function(today, weatherData){
+	renderCurrentWeather: function(today, weatherData, weekForecast){
 		//current data
 		var weekday = "<span class='weekday'>"+today.day+"</span>";
 		var date = "<span class='date'>"+ today.month + '.' + today.date + '.' + today.year +"</span>";
 		var currDate = "<div id='current_date'>"+weekday+'<br/>'+date+"</div>";
 
-		var icon = this.getWeatherIcon(weatherData.desc);
+		var icon = "<span id='current_icon'>"+this.getWeatherIcon(weatherData.desc)+"</span>";
 
 		var desc = "<div id='current_desc'><span>"+weatherData.desc+"</span></div>";
 
@@ -325,23 +378,64 @@ var mainView = Backbone.View.extend({
 		var tempC = "<span class='temp temp_C'>"+weatherData.temp['C']+"&deg;C</span>";
 		var temp = "<div id='current_temp'>"+tempF+tempC+"</div>";
 
-		var currentWeather = "<div id='weather_current'>"+currDate+icon+desc+temp+"</div>";
+		//weather of current 5 days on bottom of screen
+		var bottom = this.renderBottomDailyWeather(weekForecast);
+
+		var currentWeather = "<div id='weather_current'>"+currDate+icon+desc+temp+bottom+"</div>";
 		this.$el.find('.loading').fadeOut(300);
 		this.$el.append(currentWeather);
-
-		//updates screen settings and visuals
-		this.toggleTemp(app.model.get('tempSetting'));
-		this.toggleView(app.model.get('viewSetting'));
-		this.changeColor(weatherData.temp['F']);
-
 	},
 
+		//bottom daily weather section for current weather view
+		renderBottomDailyWeather: function(weekForecast){
+			var bottom = "<div id='bottom_daily'>";
+
+			for(var i=1; i<weekForecast.length; i++){
+				var day = "<span class='day'>"+weekForecast[i].date.day.substr(0,3)+"</span>";
+				var tempF = "<span class='temp temp_F'>"+weekForecast[i].temp['averageF']+"</span>";
+				var tempC = "<span class='temp temp_C'>"+weekForecast[i].temp['averageC']+"</span>";
+				var temp = "<span class='temp'>"+tempF+tempC+"</span>";
+
+				var icon = "<span class='day_icon'>"+this.getWeatherIcon(weekForecast[i].desc)+"</span>";
+
+				var dayItem = "<div class='current_day'>"+day+icon+temp+"</div>";
+
+				bottom = bottom + dayItem;
+
+			}
+			
+			bottom = bottom + "</div>";
+
+			return bottom;
+		},
+
+
+	/* LIST FORECAST VIEW */
 	//render screen with 5 day forecast
-	renderWeekForecast: function(data){
+	renderListWeather: function(data){
+		var list = "<div id='weather_list'>";
+		for(var i=0; i<data.length; i++){
+			var day = "<span class='day'>"+data[i].date.day+"</span>";
+			var desc = "<span class='list_desc'>"+data[i].desc+"</span>";
+			console.log(data[i].desc);
+			var left = "<div class='list_left'>"+day+desc+"</div>";
+			var tempF = "<span class='temp temp_F'>"+data[i].temp['maxF']+"&deg;F / "+data[i].temp['minF']+"&deg;F"+"</span>";
+			var tempC = "<span class='temp temp_C'>"+data[i].temp['maxC']+"&deg;C / "+data[i].temp['minC']+"&deg;C"+"</span>";
+			var temp = "<span class='temp'>"+tempF+tempC+"</span>";
 
+			var icon = "<span class='list_icon'>"+this.getWeatherIcon(data[i].desc)+"</span>";
+
+			var right = "<div class='list_right'>"+icon+temp+"</div>";
+			var dayItem = "<div class='list_day'>"+left+right+"</div>";
+
+			list = list+ dayItem;
+		}
+
+		list = list +"</div>";
+		return this.$el.append(list);
 	},
 
-	//HELPER
+	//HELPER Functions
 	getWeatherIcon: function(description){
 		//search string for keywords and returns icon
 		var description =  description.toLowerCase();
@@ -374,17 +468,14 @@ var mainView = Backbone.View.extend({
 		//RAIN
 		else if (description.indexOf('rain') != -1){
 
-			if (description.indexOf('heavy') != -1 || description.indexof('torrential') != -1)
-				icon = "wi wi-rain";
-
-			else if (description.indexOf('thunder') != -1 )
+			if (description.indexOf('thunder') != -1 )
 				icon = "wi wi-thunderstorm";
 
 			else if (description.indexOf('showers') != -1)
 				icon = 'wi wi-sprinkle';
 
 			else 
-				icon = "wi wi-sprinkle";
+				icon = "wi wi-rain";
 		}
 		//DRIZZLE
 		else if (description.indexOf('drizzle') != -1){
@@ -410,7 +501,7 @@ var mainView = Backbone.View.extend({
 			icon = "wi wi-cloudy-gusts";
 		}
 
-		var iconContent = "<i id='current_icon' class='"+icon+"'></i>";
+		var iconContent = "<i class='"+icon+"'></i>";
 
 		return iconContent;
 
@@ -420,19 +511,19 @@ var mainView = Backbone.View.extend({
 	changeColor: function(temp){
 		var temp = parseInt(temp);
 		if (temp >= 75){
-			this.$el.addClass('high');
+			return this.$el.addClass('high');
 		}
 		else if(temp < 75 && temp >= 60){
-			this.$el.addClass('midhigh');
+			return this.$el.addClass('midhigh');
 		}
 		else if(temp < 60 && temp >=50){
-			this.$el.addClass('mid');
+			return this.$el.addClass('mid');
 		}
 		else if(temp < 50 && temp >=40){
-			this.$el.addClass('midlow');
+			return this.$el.addClass('midlow');
 		}
 		else{
-			this.$el.addClass('low');
+			return this.$el.addClass('low');
 		}
 	},
 
@@ -460,8 +551,16 @@ var mainView = Backbone.View.extend({
 		this.$el.find('.loading span').fadeIn();
 	},
 
+	//changes view to FirstTime Visit View if first time user
+	pauseload: function(){
+		this.$el.find('.splash').fadeOut();
+	}
+
 
 }); //end main view
+
+
+
 
 
 
@@ -508,13 +607,13 @@ var headerView = Backbone.View.extend({
 		this.updateSettingsOnRender();
 
 		//Listeners for individual functions
-		this.$el.find('.temp_toggle').on('touch click', this.onTempSettingClick);
-		this.$el.find('.view_toggle').on('touch click', this.onViewSettingClick);
+		this.$el.find('.temp_toggle').on('touchstart click', this.onTempSettingClick);
+		this.$el.find('.view_toggle').on('touchstart click', this.onViewSettingClick);
 	},
 
 	renderViewToggle: function(){
 		var currentView = '<i id="current" class="view_toggle fa fa-square-o"></i>';
-		var weekView = '<i id="week" class="view_toggle fa fa-list-ul"></i>';
+		var weekView = '<i id="list" class="view_toggle fa fa-list-ul"></i>';
 
 		var viewToggle = "<div id='header_toggle_view'>"+currentView+weekView+"</div>";
 		return viewToggle;
@@ -559,6 +658,40 @@ var headerView = Backbone.View.extend({
 
 }) //end header view
 
+
+
+/* FIRST TIME VISITOR VIEW */
+var firstTimeView = Backbone.View.extend({
+	el: '#tiempo', //will change to header object after it is added
+
+	initialize: function(){
+		_.bindAll(this, 'render');
+		this.render();
+
+		this.$el.find('#launch_btn').on('touchstart click', this.onLaunchClick);
+	},
+
+	render: function(){
+		var welcome = "<div><span>Welcome to Tiempo!</span><span>This must be your first time.</span></div>";
+		var about = "<div><span>Tiempo is a weather web app</span><span>built by Danny Nguyen</span></div>";
+		var startbutton = "<span id='launch_btn'>Launch Tiempo</span>";
+		var usage = "<div><span>Be sure to allow for location services for best results</span>"+startbutton+"</div>";
+
+		var firstTime = "<div id='firstTime'>"+welcome+about+usage+"</div>";
+
+		return this.$el.append(firstTime);
+
+	},
+
+	onLaunchClick: function(){
+		e.stopImmediatePropagation();
+		alert('click');
+		this.$el.find('#firstTime').fadeOut(300);
+		app.searchLocation();
+	}
+
+
+});
 
 
 
