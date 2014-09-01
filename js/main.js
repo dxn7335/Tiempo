@@ -349,12 +349,10 @@ var mainView = Backbone.View.extend({
 			case 'list':
 				this.$el.find('#weather_current').hide();
 				this.$el.find('#weather_list').show();
-				
-				setTimeout(function(){
-					$(".list_day").each(function(index) {
-					    $(this).delay(150*index).fadeIn(400);
-					});
-				}, 300);
+		
+				$(".list_day").each(function(index) {
+				    $(this).delay(150*index).fadeIn(400);
+				});
 				break;
 		}
 	},
