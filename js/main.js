@@ -39,10 +39,13 @@ $(function(){
 
 	if( isMobile.any() ){
 		// Initialize App
+		if( isMobile.iOS() ){
+			app.iOS = true;
+		}
 		app.init();
 	}
 	else{
-		alert('desktop');
+		alert('Not on mobile device');
 	}
 	// Initialize App
 	//app.init();
@@ -57,9 +60,10 @@ var app = {};
 app = (function(){
 	//CONSTANTS
 	//missing key
-	var weatherURL = 'http://api.worldweatheronline.com/free/v1/weather.ashx?&format=json&num_of_days=5&q='
+	var weatherURL = 'http://api.worldweatheronline.com/free/v1/weather.ashx?key=94166457dc9f7e711a7a84729364ed9af9c82fdc&format=json&num_of_days=5&q='
 	var mapURL = 'http://maps.googleapis.com/maps/api/geocode/json?latlng=';
 	//INSTANCE VARS
+	var iOS = false;
 	var debugMode;
 	var loaded = 0;
 	var visited = false;
@@ -89,20 +93,22 @@ app = (function(){
 	//gets user's current location
 	function searchLocation(){
 		this.view.renderLoad();
-		navigator.geolocation.getCurrentPosition(
-			function(position){
-				var coord = {lat: position.coords.latitude,
-							 lon: position.coords.longitude};
-				//return coord;
-				var coords = coord.lat +","+ coord.lon;
+		
+			navigator.geolocation.getCurrentPosition(
+				function(position){
+					var coord = {lat: position.coords.latitude,
+								 lon: position.coords.longitude};
+					//return coord;
+					var coords = coord.lat +","+ coord.lon;
 
-				app.getLocationName(coords);
+					app.getLocationName(coords);
 
-			}, 
-			function(error){
-				//return false
-				app.view.showError('location');
-			});
+				}, 
+				function(error){
+					//return false
+					app.view.showError('location');
+				});
+		
 
 	}
 
@@ -132,6 +138,7 @@ app = (function(){
 		$.ajax({
 			type: 'GET',
 			url: weatherURL+location,
+			cache : false,
 			success: function(xhr){
 				console.log('start weather data');
 				app.model.parseWeatherData(xhr);
@@ -177,6 +184,7 @@ app = (function(){
 
 	return{
 		init: init,
+		iOS: iOS,
 		searchLocation: searchLocation,
 		getWeatherData: getWeatherData,
 		getLocationName: getLocationName,
@@ -344,6 +352,8 @@ var mainView = Backbone.View.extend({
 	initialize: function() {
 		_.bindAll(this, 'render');
 		this.render();
+
+		this.addSwipe();
 	},
 
 
@@ -373,11 +383,16 @@ var mainView = Backbone.View.extend({
 		//updates screen settings and visuals
 		this.toggleTemp(app.model.get('tempSetting'));
 		this.toggleView('current');
-		this.changeColor(currentData.temp['F']);
+		//this.changeColor(currentData.temp['F']);
+		this.changeColor(50);
 		console.log('finish view');
 
-		setTimeout(function(){app.header.$el.find('#tiempo_refresh').removeClass('refresh-clicked');},3500);
+
+		//add swipe listener
+
+		setTimeout(function(){app.header.$el.find('#tiempo_refresh').removeClass('refresh-clicked');},5000);
 	},
+
 
 	toggleTemp: function(unit){
 		//toggles what unit of temp is shown 
@@ -398,15 +413,15 @@ var mainView = Backbone.View.extend({
 		switch(view){
 			case 'current':
 				this.$el.find('#weather_list').hide();
-				this.$el.find('.list_day').hide();
 				this.$el.find('#weather_current').show();
+				this.$el.find('.list_day').hide();
 				break;
 			case 'list':
 				this.$el.find('#weather_current').hide();
-				this.$el.find('#weather_list').show();
+				this.$el.delay(10).find('#weather_list').show();
 		
 				$(".list_day").each(function(index) {
-				    $(this).delay(150*index).fadeIn(400);
+				    $(this).delay(100*index).fadeIn(200);
 				});
 				break;
 		}
@@ -434,7 +449,7 @@ var mainView = Backbone.View.extend({
 		//weather of current 5 days on bottom of screen
 		var bottom = this.buildBottomDailyWeather(weekForecast);
 
-		var currentWeather = "<div id='weather_current'>"+currDate+icon+desc+temp+bottom+"</div>";
+		var currentWeather = "<div id='weather_current' class='main_view'>"+currDate+icon+desc+temp+bottom+"</div>";
 		return currentWeather;
 	},
 
@@ -465,7 +480,7 @@ var mainView = Backbone.View.extend({
 	/* LIST FORECAST VIEW */
 	//render screen with 5 day forecast
 	buildListWeather: function(data){
-		var list = "<div id='weather_list'>";
+		var list = "<div id='weather_list' class='main_view'>";
 		for(var i=0; i<data.length; i++){
 			var day = "<span class='day'>"+data[i].date.day+"</span>";
 			var desc = "<span class='list_desc'>"+data[i].desc+"</span>";
@@ -490,6 +505,8 @@ var mainView = Backbone.View.extend({
 
 	//REFRESHING VIEW
 	refreshView: function(){
+		this.$el.find('.overlay').fadeOut(300);
+		setTimeout(function(){app.view.$el.find('.overlay').remove();},500);
 		this.$el.removeClass();
 		this.$el.find('.error').remove();
 		this.$el.find('#weather_current').remove();
@@ -498,7 +515,7 @@ var mainView = Backbone.View.extend({
 	},
 
 
-	//HELPER Functions
+	//HELPER Functions **
 	getWeatherIcon: function(description){
 		//search string for keywords and returns icon
 		var description =  description.toLowerCase();
@@ -574,18 +591,23 @@ var mainView = Backbone.View.extend({
 	changeColor: function(temp){
 		var temp = parseInt(temp);
 		if (temp >= 75){
+			this.$el.prepend("<div class='overlay high'></div>");
 			return this.$el.addClass('high');
 		}
 		else if(temp < 75 && temp >= 60){
+			this.$el.prepend("<div class='overlay midhigh'></div>");
 			return this.$el.addClass('midhigh');
 		}
 		else if(temp < 60 && temp >=50){
+			this.$el.prepend("<div class='overlay mid'></div>");
 			return this.$el.addClass('mid');
 		}
 		else if(temp < 50 && temp >=40){
+			this.$el.prepend("<div class='overlay midlow'></div>");
 			return this.$el.addClass('midlow');
 		}
 		else{
+			this.$el.prepend("<div class='overlay low'></div>");
 			return this.$el.addClass('low');
 		}
 	},
@@ -621,7 +643,29 @@ var mainView = Backbone.View.extend({
 	//changes view to FirstTime Visit View if first time user
 	pauseload: function(){
 		this.$el.find('.splash').fadeOut();
-	}
+	},
+
+
+	//Event Listners for main view
+	
+	//swipe body to switch views
+	addSwipe: function(){
+		/* natural swipe direction */
+		this.$el.swipe({
+			//swipe left to go to list view
+			swipeLeft:function(){
+				app.view.toggleView('list');
+				app.header.$el.find('.view_toggle').removeClass('checked');
+				app.header.$el.find('#list.view_toggle').addClass('checked');
+			},
+			//swipe right to go to current view
+			swipeRight:function(){
+				app.view.toggleView('current');
+				app.header.$el.find('.view_toggle').removeClass('checked');
+				app.header.$el.find('#current.view_toggle').addClass('checked');
+			},
+		})
+	},
 
 
 }); //end main view
@@ -712,10 +756,10 @@ var headerView = Backbone.View.extend({
 		//view settings
 		if(this.viewSetting == 'current'){
 			this.$el.find('#current').addClass('checked');
-			this.$el.find('#week').removeClass('checked');
+			this.$el.find('#list').removeClass('checked');
 		}
 		else{
-			this.$el.find('#week').addClass('checked');
+			this.$el.find('#list').addClass('checked');
 			this.$el.find('#current').removeClass('checked');
 		}
 	},
@@ -724,7 +768,7 @@ var headerView = Backbone.View.extend({
 	//on click of view toggle item
 	onViewSettingClick: function(e){
 		e.stopImmediatePropagation();
-	
+		
 		app.header.$el.find('.view_toggle').removeClass('checked');
 		$(this).addClass('checked');
 		//changes setting in model
@@ -741,7 +785,6 @@ var headerView = Backbone.View.extend({
 
 	onSettingsClick: function(e){
 		e.stopImmediatePropagation();
-
 		app.header.$el.find('#tiempo_settings').show();
 
 	}
@@ -773,7 +816,8 @@ var settingView = Backbone.View.extend({
 		var temp = "<div class='settings_sect'><span class='sect_title'>Temperature</span>"+tempToggle+"</div>";
 
 		//about
-		var message = "<div>Made by Danny Nguyen</div>";
+		var link = "<a href='http://worldweatheronline.com'>World Weather Online</a>";
+		var message = "<div>Made by Danny Nguyen</div><div>Powered by "+link+"</div>";
 		var about = "<div class='settings_sect'><span class='sect_title'>About</span>"+message+"</div>";
 
 		var close = "<span id='settings_close'>x</span>";
@@ -795,8 +839,9 @@ var settingView = Backbone.View.extend({
 	},
 	//close setting window
 	onSettingsCloseClick: function(e){
-		e.stopImmediatePropagation();
 		app.header.$el.find('#tiempo_settings').fadeOut(300);
+		e.stopImmediatePropagation();
+		return false;
 	},
 
 }); //end settingView

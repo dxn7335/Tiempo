@@ -34,6 +34,29 @@ html,body{
 }
 
 
+
+/* FADE IN ANIMATION W/ POP */
+@keyframes transitin {
+    from { opacity: 0;}
+    to   { opacity: 1; }
+}
+
+@-webkit-keyframes transitin {
+    from { opacity: 0;}
+    to   { opacity: 1;}
+}
+
+/* Firefox < 16 */
+@-moz-keyframes transitin {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+/* Internet Explorer */
+@-ms-keyframes transitin {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
 /* SLIDE IN ANIMATION */
 /* Safari, Chrome and Opera > 12.1 */
 @-webkit-keyframes slidein {
@@ -62,50 +85,85 @@ html,body{
 /* MAIN BODY /////////////////////////////////////////////////////*/
 #tiempo{
 	display:block;
+	position:relative;
 	width:100%;
 	height: 100%;
 	overflow:hidden;
 	min-height:480px;
-	transition: background ease-in-out 1.6s;
-	-webkit-transition: background ease-in-out 1.6s;
-	-moz-transition: background ease-in-out 1.6s;
-	-ms-transition: background ease-in-out 1.6s;
+	transition: background ease-in-out 1.5s;
+	-webkit-transition: background ease-in-out 1.5s;
+	-moz-transition: background ease-in-out 1.5s;
+	-ms-transition: background ease-in-out 1.5s;
 }
 
 #tiempo.initial{
 }
 /* Temperature Level Indication from background color */
 #tiempo.low{
-	background: #3EAFFA;
-/*	background: -webkit-linear-gradient(to bottom, #3EAFFA, #0042CF);
-	background: -moz-linear-gradient(to bottom, #3EAFFA, #0042CF);
-	background: -ms-linear-gradient(to bottom, #3EAFFA, #0042CF);
-	background: linear-gradient(to bottom, #3EAFFA, #0042CF); */
+	background: #3EAFFA; 
 }
 #tiempo.midlow{
 	background: #0073F0;
 }
 #tiempo.mid{
 	background: #FFCC2C;
-/*	background: -webkit-linear-gradient(to bottom, #FFD600, #FF9900);
-	background: -moz-linear-gradient(to bottom, #FFD600, #FF9900);
-	background: -ms-linear-gradient(to bottom, #FFD600, #FF9900);
-	background: linear-gradient(to bottom, #FFD600, #FF9900); */
 }
 #tiempo.midhigh{
 	background: #FD702E;
-/*	background: -webkit-linear-gradient(to top, #FF662A, #F5951A);
-	background: -moz-linear-gradient(to top, #FF662A, #F5951A);
-	background: -ms-linear-gradient(to top, #FF662A, #F5951A);
-	background: linear-gradient(to top, #FF662A, #F5951A); */
 }
 #tiempo.high{
 	background: #FF374F;
-/*	background: -webkit-linear-gradient(to bottom, #ea274b, #FF3838);
-	background: -moz-linear-gradient(to bottom, #ea274b, #FF3838);
-	background: -ms-linear-gradient(to bottom, #ea274b, #FF3838);
-	background: linear-gradient(to bottom, #ea274b, #FF3838); */
 }
+	.overlay{
+		display:block;
+		position:absolute;
+		left:0;
+		right:0;
+		top:0;
+		bottom:0;
+		-webkit-animation: transitin 2s; /* Safari, Chrome and Opera > 12.1 */
+	   	-moz-animation: transitin 2s; /* Firefox < 16 */
+	    -ms-animation: transitin 2s; /* Internet Explorer */
+	     -o-animation: transitin 2s; /* Opera < 12.1 */
+	}
+	.overlay.low{
+		background: #3EAFFA; 
+	 	background: -webkit-linear-gradient(to bottom, #3CB1FF, #A158FD);
+		background: -moz-linear-gradient(to bottom, #3CB1FF, #A158FD);
+		background: -ms-linear-gradient(to bottom, #3CB1FF, #A158FD);
+		background: linear-gradient(to bottom, #3CB1FF, #A158FD);
+ 	}
+ 	.overlay.midlow{
+ 		background: #9B2DFF;
+ 		background: -webkit-linear-gradient(to bottom, #9B2DFF, #3F5EFF);
+		background: -moz-linear-gradient(to bottom, #9B2DFF, #3F5EFF);
+		background: -ms-linear-gradient(to bottom, #9B2DFF, #3F5EFF);
+		background: linear-gradient(to bottom, #9B2DFF, #3F5EFF);
+ 	}
+ 	.overlay.mid{
+		background: #FFCC2C;
+		background: -webkit-linear-gradient(to bottom, #FFC200, #FF4D35);
+		background: -moz-linear-gradient(to bottom, #FFC200, #FF4D35);
+		background: -ms-linear-gradient(to bottom, #FFC200, #FF4D35);
+		background: linear-gradient(to bottom, #FFC200, #FF4D35);
+ 	}
+	.overlay.midhigh{
+		background: #FD702E;
+	 	background: -webkit-gradient(linear, 0 0, 0 100%, from(#FF8038), to(#FF1B49));
+	    background: -webkit-linear-gradient(top, #FF8038, #FF1B49);
+	    background: -moz-linear-gradient(top, #FF8038, #FF1B49);
+	    background: -ms-linear-gradient(top, #FF8038, #FF1B49);
+	    background: linear-gradient(to bottom, #FF8038, #FF1B49);
+ 	}
+ 	.overlay.high{
+		background: #FF374F;
+		background: -webkit-linear-gradient(to bottom, #FF3A69, #FF322A);
+		background: -moz-linear-gradient(to bottom, #FF3A69, #FF322A);
+		background: -ms-linear-gradient(to bottom, #FF3A69, #FF322A);
+		background: linear-gradient(to bottom, #FF3A69, #FF322A); 
+ 	}
+
+
 
 .splash
 {
@@ -188,6 +246,7 @@ html,body{
 /* HEADER ////////////////////////////////////////////////////////////////////*/
 #tiempo_header{
 	display: block;
+	position:relative;
 	color: #FFF;
 	margin-bottom: 3%;
 	min-height: 50px;
@@ -210,7 +269,7 @@ html,body{
 	/* padding-left: 1%; */
 	/* border-radius: 8px; */
 	font-weight: 700;
-	font-size: 130%;
+	font-size: 125%;
 }
 
 /* refresh btn */
@@ -259,6 +318,10 @@ html,body{
 		padding: 0.7% 0;
 		text-align: center;
 		font-size: 120%;
+		transition: background ease-in-out .25s;
+		-webkit-transition: background ease-in-out .25s;
+		-moz-transition: background ease-in-out .25s;
+		-ms-transition: background ease-in-out .25s;
 	}
 	.view_toggle.checked{
 		background: rgba(255, 255, 255, 0.95);
@@ -270,7 +333,7 @@ html,body{
 #tiempo_settings{
 	display:none;
 	position:absolute;
-	background:rgba(0,0,0,0.9);
+	background:rgba(33,33,33,0.95);
 	padding: 2%;
 	top: 0;
 	left: 0;
@@ -302,16 +365,24 @@ html,body{
 		margin-bottom: 10%;
 		padding-left: 5%;
 	}
-	.settings_sect > .sect_title{
-		display: block;
-		clear: both;
-		font-size: 105%;
-		border-bottom: 1px solid rgba(255, 143, 0, 0.21);
-		/* border-top: 1px solid rgba(255,255,255,0.3); */
-		padding: 3% 0;
-		margin-left: -5%;
-		margin-bottom: 2%;
-	}
+		.settings_sect > .sect_title{
+			display: block;
+			clear: both;
+			font-size: 105%;
+			border-bottom: 1px solid rgba(255, 143, 0, 0.21);
+			/* border-top: 1px solid rgba(255,255,255,0.3); */
+			padding: 3% 0;
+			margin-left: -5%;
+			margin-bottom: 2%;
+		}
+		.settings_sect a{
+			color: orange;
+			text-decoration: none;
+		}
+		.settings_sect div{
+			margin-top:2%;
+		}
+
 	#settings_close{
 		color: #FF924A;
 		/* color: #FFF; */
@@ -321,7 +392,7 @@ html,body{
 		font-size: 140%;
 		border: 1px solid rgba(255, 143, 0, 0.3);
 		border-radius: 60px;
-		padding: 0.06% 3.7% 1% 3.7%;
+		padding: 0.1% 3.5% 1% 3.5%;
 	}
 		#settings_close:active{
 			color:#FFF;
@@ -354,6 +425,7 @@ html,body{
 /* CURRENT WEATHER VIEW /////////////////////////////////////////////////////////////////*/
 #weather_current{
 	color:#FFF;
+	position:relative;
 	padding-left:8%;
 	padding-right:8%;
 	-webkit-animation: fadein 0.5s; /* Safari, Chrome and Opera > 12.1 */
@@ -442,6 +514,7 @@ html,body{
 }
 	.list_day{
 		display:none;
+		position:relative;
 		width:100%;
 		border-top:1px solid rgba(255,255,255,0.2);
 		padding: 2% 0;
@@ -471,6 +544,7 @@ html,body{
 		display:inline-block;
 		float: right;
 		padding: 1% 0;
+		padding-right:1%;
 		width: 43%;
 	}
 	.list_day .list_icon{
@@ -565,7 +639,7 @@ html,body{
 
 @media only screen and (max-width : 360px) and (max-device-width: 640px){
 /* Styles */
-	body{font-size: 90%;}
+	body{font-size: 88%;}
 	#current_icon{ font-size: 800%; margin-top: 13%; margin-bottom:3%;}
 	#header_location{margin-left:10px;}
 	#tiempo_header{margin-bottom:12%;}
@@ -579,7 +653,7 @@ html,body{
 /* Smartphones (portrait) ----------- */
 @media only screen and (max-width : 320px) and (portrait:landscape){
 /* Styles */
-	body{font-size: 90%;}
+	body{font-size: 85%;}
 	#current_icon{ font-size: 950%; margin-top: 13%; margin-bottom:3%;}
 	#header_location{margin-left:10px;}
 	#tiempo_header{margin-bottom:10%;}
@@ -587,6 +661,35 @@ html,body{
 	.view_toggle{padding: 2% 0;}
 	#bottom_daily{margin-top: 20%; padding-top:8%;}
 	.current_day .day_icon{margin-bottom:5%;}
+	.list_day{padding: 5% 0;}
+}
+
+
+/* iPads (landscape) ----------- */
+@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : landscape) {
+/* Styles */
+	#tiempo_header{margin-bottom:5%;}
+	#tiempo_header_bottom{font-size:105%;}
+	#header_location{font-size:140%;}
+	#tiempo_refresh{margin-right:2%; padding: 0.5% 2%;}
+	#tiempo_settings_btn{padding: .18% 2% .3%;}
+	#current_icon{ font-size: 950%; margin-top: 7%; margin-bottom:4%;}
+	#bottom_daily{margin-top: 6.5%}
+	#weather_list{margin-top:9%;}
+}
+
+/* iPads (portrait) ----------- */
+@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : portrait) {
+/* Styles */
+	#tiempo_header{margin-bottom:10%;}
+	#tiempo_header_bottom{font-size:140%;}
+	#tiempo_refresh{margin-right:2%; padding: 0.5% 2%;}
+	#tiempo_settings_btn{padding: .18% 2% .3%;}
+	#header_location{font-size:145%;}
+	#weather_current{font-size:120%;}
+	#current_icon{ font-size: 950%; margin-top: 20%; margin-bottom:5%;}
+	#bottom_daily{margin-top: 12%}
+	#weather_list{margin-top:3%;}
 	.list_day{padding: 5% 0;}
 }
 
