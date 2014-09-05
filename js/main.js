@@ -59,8 +59,9 @@ var app = {};
 
 app = (function(){
 	//CONSTANTS
-	//missing key
-	var weatherURL = 'http://api.worldweatheronline.com/free/v1/weather.ashx?key=94166457dc9f7e711a7a84729364ed9af9c82fdc&format=json&num_of_days=5&q='
+	/* missing key */
+	var key;
+	var weatherURL = 'http://api.worldweatheronline.com/free/v1/weather.ashx?key='+key+'&format=json&num_of_days=5&q='
 	var mapURL = 'http://maps.googleapis.com/maps/api/geocode/json?latlng=';
 	//INSTANCE VARS
 	var iOS = false;
