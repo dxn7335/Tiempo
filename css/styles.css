@@ -157,10 +157,10 @@ html,body{
  	}
  	.overlay.high{
 		background: #FF374F;
-		background: -webkit-linear-gradient(to bottom, #FF3A69, #FF322A);
-		background: -moz-linear-gradient(to bottom, #FF3A69, #FF322A);
-		background: -ms-linear-gradient(to bottom, #FF3A69, #FF322A);
-		background: linear-gradient(to bottom, #FF3A69, #FF322A); 
+		background: -webkit-linear-gradient(to bottom, #FF2A6E, #FF221A);
+		background: -moz-linear-gradient(to bottom, #FF2A6E, #FF221A);
+		background: -ms-linear-gradient(to bottom, #FF2A6E, #FF221A);
+		background: linear-gradient(to bottom, #FF2A6E, #FF221A); 
  	}
 
 
@@ -290,6 +290,8 @@ html,body{
 	}
 	.refresh-clicked{
 		opacity:0.3;
+		background:#FFF;
+		color: #FF8F00;
 	}
 
 /* settings btn */
@@ -318,10 +320,10 @@ html,body{
 		padding: 0.7% 0;
 		text-align: center;
 		font-size: 120%;
-		transition: background ease-in-out .25s;
-		-webkit-transition: background ease-in-out .25s;
-		-moz-transition: background ease-in-out .25s;
-		-ms-transition: background ease-in-out .25s;
+		transition: background ease-in-out .1s;
+		-webkit-transition: background ease-in-out .1s;
+		-moz-transition: background ease-in-out .1s;
+		-ms-transition: background ease-in-out .1s;
 	}
 	.view_toggle.checked{
 		background: rgba(255, 255, 255, 0.95);
@@ -395,8 +397,8 @@ html,body{
 		padding: 0.1% 3.5% 1% 3.5%;
 	}
 		#settings_close:active{
-			color:#FFF;
-			background: #FF8F00;
+			background:#FFF;
+			color: #FF8F00;
 		}
 
 	#settings_temp_toggle{

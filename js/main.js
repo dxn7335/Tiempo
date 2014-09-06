@@ -60,7 +60,7 @@ var app = {};
 app = (function(){
 	//CONSTANTS
 	/* missing key */
-	var key;
+	var key; 
 	var weatherURL = 'http://api.worldweatheronline.com/free/v1/weather.ashx?key='+key+'&format=json&num_of_days=5&q='
 	var mapURL = 'http://maps.googleapis.com/maps/api/geocode/json?latlng=';
 	//INSTANCE VARS
@@ -254,11 +254,7 @@ var model = Backbone.Model.extend({
 		//current conditions
 		currTemp['F'] = data.temp_F;
 		currTemp['C'] = data.temp_C;
-		var currDesc = data.weatherDesc[0].value;
-
-		if(currDesc.indexOf('ice pellets') != -1){
-			currDesc.replace('ice pellets', 'hail');
-		}
+		var currDesc = this.checkDesc(data.weatherDesc[0].value);
 
 		var curr = { temp: currTemp, desc: currDesc };
 		this.set({'currentWeather':curr});
@@ -279,11 +275,10 @@ var model = Backbone.Model.extend({
 			var fulldate =  month+"."+numdate+"."+year;
 
 			var date = {day: day, full: fulldate};
+			//checks desc
+			var desc = this.checkDesc(data[i].weatherDesc[0].value);
+			
 
-			var desc = data[i].weatherDesc[0].value;
-			if(desc.indexOf('ice pellets') != -1){
-				desc.replace('ice pellets', 'hail');
-			}
 			var temp = [];
 
 			//average out temperature results
@@ -304,6 +299,27 @@ var model = Backbone.Model.extend({
 
 
 		this.set({'forecast':forecast});
+	},
+
+	checkDesc: function(string){
+		//check description for 
+		if(string.indexOf('ice pellets') != -1){
+			string = string.replace("ice pellets", "hail");
+		}
+		else if(string.indexOf('Ice pellets') != -1){
+			string = string.replace("Ice pellets", "Hail");
+		}
+		else if(string.indexOf('Thundery') != -1){
+			string = string.replace('Thundery', 'Thunder');
+		}
+		else if(string.indexOf('Moderate or heavy') != -1){
+			string = string.replace('Moderate or heavy', 'Moderate/heavy');
+		}
+		else if(string.indexOf('in area') != -1){
+			string = string.replace('in area', '');
+		}
+
+		return string;
 	},
 
 	saveLocation: function(data){
@@ -384,14 +400,12 @@ var mainView = Backbone.View.extend({
 		//updates screen settings and visuals
 		this.toggleTemp(app.model.get('tempSetting'));
 		this.toggleView('current');
-		//this.changeColor(currentData.temp['F']);
-		this.changeColor(50);
+		this.changeColor(currentData.temp['F']);
+
 		console.log('finish view');
 
-
-		//add swipe listener
-
 		setTimeout(function(){app.header.$el.find('#tiempo_refresh').removeClass('refresh-clicked');},5000);
+
 	},
 
 
@@ -540,7 +554,7 @@ var mainView = Backbone.View.extend({
 		}
 		//HAIL
 		else if ( description.indexOf('hail') != -1 ){
-			icon = 'wi wi-hail';
+			icon = 'wi wi-snow';
 		}
 		//SLEET
 		else if (description.indexOf('sleet') != -1){
@@ -550,13 +564,17 @@ var mainView = Backbone.View.extend({
 		else if (description.indexOf('rain') != -1){
 
 			if (description.indexOf('thunder') != -1 )
-				icon = "wi wi-thunderstorm";
+				icon = "wi wi-storm-showers";
 
 			else if (description.indexOf('showers') != -1)
 				icon = 'wi wi-sprinkle';
 
 			else 
 				icon = "wi wi-rain";
+		}
+		//THUNDER
+		else if (description.indexOf('thunder') != -1){
+			icon = "wi wi-night-lightning";
 		}
 		//DRIZZLE
 		else if (description.indexOf('drizzle') != -1){
@@ -737,12 +755,12 @@ var headerView = Backbone.View.extend({
 	setUIListeners: function(){
 		//Listeners for individual functions
 		//settings
-		this.$el.find('#tiempo_settings_btn').on('touchstart click', this.onSettingsClick);
+		this.$el.find('#tiempo_settings_btn').on('touchend click', this.onSettingsClick);
 		this.$el.find('.temp_toggle').on('touchstart click', this.setting.onTempSettingClick);
-		this.$el.find('#settings_close').on('touchstart click', this.setting.onSettingsCloseClick);
+		this.$el.find('#settings_close').on('touchend click', this.setting.onSettingsCloseClick);
 		//misc
 		this.$el.find('.view_toggle').on('touchstart click', this.onViewSettingClick);
-		this.$el.find('#tiempo_refresh').on('touchstart click', this.onRefreshClick);
+		this.$el.find('#tiempo_refresh').on('touchend click', this.onRefreshClick);
 	},
 
 
@@ -817,7 +835,7 @@ var settingView = Backbone.View.extend({
 		var temp = "<div class='settings_sect'><span class='sect_title'>Temperature</span>"+tempToggle+"</div>";
 
 		//about
-		var link = "<a href='http://worldweatheronline.com'>World Weather Online</a>";
+		var link = "<a href='http://worldweatheronline.com' target='_blank'>World Weather Online</a>";
 		var message = "<div>Made by Danny Nguyen</div><div>Powered by "+link+"</div>";
 		var about = "<div class='settings_sect'><span class='sect_title'>About</span>"+message+"</div>";
 
