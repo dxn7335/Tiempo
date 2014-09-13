@@ -60,7 +60,7 @@ var app = {};
 app = (function(){
 	//CONSTANTS
 	/* missing key */
-	var key; 
+	var key;
 	var weatherURL = 'http://api.worldweatheronline.com/free/v1/weather.ashx?key='+key+'&format=json&num_of_days=5&q='
 	var mapURL = 'http://maps.googleapis.com/maps/api/geocode/json?latlng=';
 	//INSTANCE VARS
@@ -308,6 +308,9 @@ var model = Backbone.Model.extend({
 		}
 		else if(string.indexOf('Ice pellets') != -1){
 			string = string.replace("Ice pellets", "Hail");
+		}
+		else if(string.indexOf('freezing rain') != -1){
+			string = string.replace("freezing rain", "sleet");
 		}
 		else if(string.indexOf('Thundery') != -1){
 			string = string.replace('Thundery', 'Thunder');
@@ -609,19 +612,19 @@ var mainView = Backbone.View.extend({
 	//Change color of screen based on current temp
 	changeColor: function(temp){
 		var temp = parseInt(temp);
-		if (temp >= 75){
+		if (temp >= 79){
 			this.$el.prepend("<div class='overlay high'></div>");
 			return this.$el.addClass('high');
 		}
-		else if(temp < 75 && temp >= 60){
+		else if(temp < 79 && temp >= 70){
 			this.$el.prepend("<div class='overlay midhigh'></div>");
 			return this.$el.addClass('midhigh');
 		}
-		else if(temp < 60 && temp >=50){
+		else if(temp < 69 && temp >=60){
 			this.$el.prepend("<div class='overlay mid'></div>");
 			return this.$el.addClass('mid');
 		}
-		else if(temp < 50 && temp >=40){
+		else if(temp < 60 && temp >=50){
 			this.$el.prepend("<div class='overlay midlow'></div>");
 			return this.$el.addClass('midlow');
 		}
