@@ -315,11 +315,11 @@ html,body{
 	width: 100%;
 }
 	.view_toggle{
-		display:block;
+		display:inline-block;
 		width: 50%;
 		padding: 0.7% 0;
 		text-align: center;
-		font-size: 120%;
+		font-size: 100%;
 		transition: background ease-in-out .1s;
 		-webkit-transition: background ease-in-out .1s;
 		-moz-transition: background ease-in-out .1s;

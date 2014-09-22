@@ -1,0 +1,190 @@
+body.desktop{
+	overflow: hidden;
+	background: rgb(255, 109, 97);
+}
+
+#preview{
+	position: absolute;
+	min-width: 800px;
+  	left: 50%;
+  	top: 48%;
+  	transform: translate(-50%, -48%);
+}
+
+#info, #photo{
+	display:inline-block;
+}
+
+#info{
+	float: left;
+	color: #fff;
+	z-index: 1;
+	padding: 2%;
+	position: absolute;
+	top: 20%;
+}
+#info h1{
+
+	z-index:2;
+	display: block;
+	position:relative;
+}
+#info p{
+	z-index:1;
+	font-size:120%;
+	font-weight:300;
+	margin-bottom: 15%;
+	color: rgba(255,255,255,0.8);
+	-webkit-animation: slidefromTop 1s; /* Safari, Chrome and Opera > 12.1 */
+   	-moz-animation: slidefromTop 1s; /* Firefox < 16 */
+    -ms-animation: slidefromTop 1s; /* Internet Explorer */
+     -o-animation: slidefromTop 1s; /* Opera < 12.1 */
+}
+#info-btn{
+	font-size: 120%;
+	font-weight: 300;
+	border: 1px solid #fff;
+	border-radius: 20px;
+	min-width: 80px;
+	padding: 8px 30px;
+	margin-top:1%;
+	cursor:pointer;
+	transition: all ease-in-out .2s;
+	-webkit-transition: all ease-in-out .2s;
+	-moz-transition: all ease-in-out .2s;
+	-ms-transition: all ease-in-out .2s;
+	-webkit-animation-delay: 0.6s;
+	-webkit-animation: slidefromTop 1s; /* Safari, Chrome and Opera > 12.1 */
+   	-moz-animation: slidefromTop 1s; /* Firefox < 16 */
+    -ms-animation: slidefromTop 1s; /* Internet Explorer */
+     -o-animation: slidefromTop 1s; /* Opera < 12.1 */
+}
+#info-btn:hover{
+	background: #fff;
+	color: rgb(255, 109, 97);
+}
+
+#photo{
+	float:right;
+	margin-left: 20%;
+}
+#photo > img{
+	width: 70%;
+	min-width: 300px;
+	float: right;
+}
+
+#more-info{
+	z-index:4;
+	display:none;
+	background: #fff;
+	position: absolute;
+	padding:3% 4.5% 6% 4.5%;
+  	left: 50%;
+  	top: 40%;
+  	transform: translate(-50%, -40%);
+	width: 25%;
+	min-width:400px;
+	font-weight:300;
+	color:#464646;
+	-webkit-animation: slidefromBottom .5s; /* Safari, Chrome and Opera > 12.1 */
+   	-moz-animation: slidefromBottom .5s; /* Firefox < 16 */
+    -ms-animation: slidefromBottom .5s; /* Internet Explorer */
+     -o-animation: slidefromBottom .5s; /* Opera < 12.1 */
+}
+#more-info a{
+	text-decoration: none;
+	color: rgb(255, 82, 0);
+}
+#more-info>#credits{
+	display:block;
+	margin-top:10%;
+}
+#more-info>#credits>#social i{
+	padding: 4px 5px;
+	border: 1px solid;
+	min-width: 15px;
+	text-align: center;
+	border-radius: 15px;
+	margin-left: 1%;
+}
+#more-info>#credits>#social i:hover{
+	color:#fff;
+	background: rgb(255, 82, 0);
+}
+
+#desktop-view > .overlay{
+	z-index:3;
+	display:none;
+	width:100%;
+	position:absolute;
+	top:0;
+	left:0;
+	bottom:0;
+	background:rgba(0,0,0,0.35);
+	-webkit-animation: transitin 1s; /* Safari, Chrome and Opera > 12.1 */
+   	-moz-animation: transitin 1s; /* Firefox < 16 */
+    -ms-animation: transitin 1s; /* Internet Explorer */
+     -o-animation: transitin 1s; /* Opera < 12.1 */
+}
+
+/* FADE IN ANIMATION W/ POP */
+@keyframes transitin {
+    from { opacity: 0;}
+    to   { opacity: 1; }
+}
+
+@-webkit-keyframes transitin {
+    from { opacity: 0;}
+    to   { opacity: 1;}
+}
+
+/* Firefox < 16 */
+@-moz-keyframes transitin {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+/* Internet Explorer */
+@-ms-keyframes transitin {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+
+
+/* SLIDE IN ANIMATION */
+/* Safari, Chrome and Opera > 12.1 */
+@-webkit-keyframes slidefromBottom {
+    from { opacity: 0; top:100%;}
+    to   { opacity: 1; top:40%;}
+}
+/* Internet Explorer */
+@-ms-keyframes slidefromBottom {
+    from { opacity: 0; top:100%;}
+    to   { opacity: 1; top:40%;}
+}
+@keyframes slidefromBottom {
+    from { opacity: 0; top:100%;}
+    to   { opacity: 1; top:40%;}
+}
+/* Firefox < 16 */
+@-moz-keyframes slidefromBottom {
+    from { opacity: 0; top:100%;}
+    to   { opacity: 1; top:40%;}
+}
+
+/* SLIDE IN ANIMATION */
+/* Safari, Chrome and Opera > 12.1 */
+@-webkit-keyframes slidefromTop {
+    from { opacity: 0; margin-top:-32%;}
+    to   { opacity: 1; margin-top:0;}
+}
+/* Internet Explorer */
+@-ms-keyframes slidefromTop {
+    from { opacity: 0; margin-top:-32%;}
+    to   { opacity: 1; margin-top:0;}
+}
+@keyframes slidefromTop {
+    from { opacity: 0; margin-top:-32%;}
+    to   { opacity: 1; margin-top:0;}
+}
