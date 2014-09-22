@@ -9,6 +9,10 @@ body.desktop{
   	left: 50%;
   	top: 48%;
   	transform: translate(-50%, -48%);
+  	-webkit-transform: translate(-50%, -48%);
+  	-moz-transform: translate(-50%, -48%);
+  	-ms-transform: translate(-50%, -48%);
+  	-o-transform: translate(-50%, -48%);
 }
 
 #info, #photo{
@@ -83,6 +87,10 @@ body.desktop{
   	left: 50%;
   	top: 40%;
   	transform: translate(-50%, -40%);
+  	-webkit-transform: translate(-50%, -40%);
+  	-moz-transform: translate(-50%, -40%);
+  	-ms-transform: translate(-50%, -40%);
+  	-o-transform: translate(-50%, -40%);
 	width: 25%;
 	min-width:400px;
 	font-weight:300;
