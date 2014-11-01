@@ -4,11 +4,12 @@
 
  - Danny Nguyen
 /----------------------------------------------------------------------------*/
-var desktop_view = function(){
+var desktop_view = (function(){
 
 	function init(){
+		$('#desktop-view').fadeIn(400);
 		initComponents();
-	};
+	}
 
 	function initComponents(){
 		$('body').addClass('desktop');
@@ -21,13 +22,13 @@ var desktop_view = function(){
 
 		//click handler to get out of more info view
 		$('.overlay').on('click', function(e){
-			$(this).fadeOut(300);
+			$('.overlay').fadeOut(300);
 			$('#more-info').fadeOut(300);
-		})
+		});
 	}
 
 	return{
 		init:init,
 	}
-}
+})();
 

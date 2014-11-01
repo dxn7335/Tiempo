@@ -2,6 +2,7 @@
 <html>
 <head>
 	<title>Tiempo</title>
+	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, maximum-scale=1, minimum-scale=0.5">
 	<!-- IOS web apps -->
 	<meta name="mobile-web-app-capable" content="yes">
@@ -20,13 +21,14 @@
 	<link rel="stylesheet" type="text/css" href="css/styles.css" />
 	<link rel="stylesheet" type="text/css" href="css/desktop_style.css" />
 	<!--Libraries -->
-	<script src="lib/jquery-1.11.1.min.js"></script>
+	<script src="http://code.jquery.com/jquery-1.11.1.min.js" type="text/javascript"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore-min.js"></script>
 	<script src="http://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.2/backbone-min.js"></script>
 	<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery.touchswipe/1.6.4/jquery.touchSwipe.min.js"></script>
 	<!--JS-->
-	<script src="js/desktop.js"></script>
-	<script src="js/main.js"></script>
+	<script src="js/desktop.js" type="text/javascript"></script>
+	<!--<script src="js/main.js" type="text/javascript"></script>-->
+	<script data-main="js/main.js" src="http://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.14/require.min.js"></script>
 </head>
 <body>
 	<!--Shown when viewing page on desktop -->
@@ -38,14 +40,14 @@
 				<span id='info-btn'>Try it!</span>
 			</div>
 			<div id='photo'>
-				<img src='assets/sample.png' al='photo'/>		
+				<img src='assets/sample2.png' al='photo'/>		
 			</div>
 		</div>
 		<div class='overlay'></div>
 		<div id='more-info'>
 			<h2>About</h2>
-			<p><b>Tiempo</b> is a weather web app intended for mobile use. Simple and effective, the app makes use of touch gestures as well as color to give you info on the weather around you.</p>
-			<p>Visit <b>this page</b> on your mobile device to view, and also add it to your homescreen for faster access.<br/><i>(It has a cool icon)</i></p>
+			<p><b>Tiempo</b> is a weather web app intended for mobile use. Simple and easy-to-use, the app makes use of touch gestures as well as color to give you info on the weather around you.</p>
+			<p>Visit <b>this page</b> on your mobile device to view, and also add it to your homescreen for faster access. <i>(It has a cool icon)</i></p>
 			<div id='credits'>
 				<span id='created'>Created by <a href='http://people.rit.edu/dxn7335'>Danny Nguyen</a></span>
 				<span id='social'>
