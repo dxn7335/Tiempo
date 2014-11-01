@@ -9,6 +9,10 @@ html,body{
     background: -moz-linear-gradient(top, #f4ad48, #ea274b);
     background: -ms-linear-gradient(top, #f4ad48, #ea274b);
     background: linear-gradient(to bottom, #f4ad48, #ea274b);
+    transition: background ease-in-out 1s;
+	-webkit-transition: background ease-in-out 1s;
+	-moz-transition: background ease-in-out 1s;
+	-ms-transition: background ease-in-out 1s;
 }
 
 /* FADE IN ANIMATION W/ POP */
@@ -173,6 +177,10 @@ html,body{
     left: 0;
     width: 100%;
     height: 100%;
+    -webkit-animation: fadein 0.7s; /* Safari, Chrome and Opera > 12.1 */
+   	-moz-animation: fadein 0.7s; /* Firefox < 16 */
+    -ms-animation: fadein 0.7s; /* Internet Explorer */
+     -o-animation: fadein 0.7s; /* Opera < 12.1 */
 }
 
 .splash:before
@@ -269,7 +277,7 @@ html,body{
 	/* padding-left: 1%; */
 	/* border-radius: 8px; */
 	font-weight: 700;
-	font-size: 125%;
+	font-size: 118%;
 }
 
 /* refresh btn */
@@ -585,7 +593,7 @@ html,body{
 
 
 /* Smartphones (portrait and landscape) ----------- */
-@media only screen and (min-device-width : 320px) and (max-device-width : 480px) {
+@media only screen and (min-device-width : 320px) and (max-device-width : 480px) and (portrait:portrait) {
 /* Styles */
 	body{font-size: 70%;}
 	#current_icon{ font-size: 900%; margin-top: 13%; margin-bottom:3%;}
@@ -596,20 +604,6 @@ html,body{
 	#bottom_daily{margin-top: 20%; padding-top:8%;}
 	.current_day .day_icon{margin-bottom:5%;}
 	.list_day{padding: 3% 0;}
-}
-
-/* Iphone 5 ----------- */
-@media only screen and (min-device-width : 320px) and (max-device-width : 568px) {
-/* Styles */
-	body{font-size: 90%;}
-	#current_icon{ font-size: 800%; margin-top: 13%; margin-bottom:3%;}
-	#header_location{margin-left:10px;}
-	#tiempo_header{margin-bottom:12%;}
-	#tiempo_header_top{padding-left: 4%;}
-	.view_toggle{padding: 2% 0;}
-	#bottom_daily{margin-top: 20%; padding-top:8%;}
-	.current_day .day_icon{margin-bottom:5%;}
-	.list_day{padding: 5% 0;}
 }
 
 @media only screen and (min-device-width : 360px) and (max-device-width : 480px) {
@@ -639,7 +633,14 @@ html,body{
 	.list_day{padding: 5% 0;}
 }
 
-@media only screen and (max-width : 360px) and (max-device-width: 640px){
+/* Iphone 5 ----------- */
+@media only screen and (min-device-width : 320px) and (max-device-width : 568px) and (-webkit-min-device-pixel-ratio: 2) {
+/* Styles */
+	body{font-size: 75%;}
+}
+
+/*Samsung Galaxy 3, Google Nexus */
+@media only screen and (min-device-width : 360px) and (max-device-width: 640px){
 /* Styles */
 	body{font-size: 88%;}
 	#current_icon{ font-size: 800%; margin-top: 13%; margin-bottom:3%;}
@@ -652,20 +653,14 @@ html,body{
 	.list_day{padding: 5% 0;}
 }
 
-/* Smartphones (portrait) ----------- */
-@media only screen and (max-width : 320px) and (portrait:landscape){
-/* Styles */
-	body{font-size: 85%;}
-	#current_icon{ font-size: 950%; margin-top: 13%; margin-bottom:3%;}
-	#header_location{margin-left:10px;}
-	#tiempo_header{margin-bottom:10%;}
-	#tiempo_header_top{padding-left: 4%;}
-	.view_toggle{padding: 2% 0;}
-	#bottom_daily{margin-top: 20%; padding-top:8%;}
-	.current_day .day_icon{margin-bottom:5%;}
-	.list_day{padding: 5% 0;}
+
+@media only screen and (min-device-width : 375px) and (max-device-width : 667px) and (-webkit-min-device-pixel-ratio : 2){ 
+    body{font-size: 95%;}
 }
 
+@media only screen and (min-device-width : 414px) and (max-device-width : 736px) and (-webkit-min-device-pixel-ratio : 2){ 
+    body{font-size: 100%;}
+}
 
 /* iPads (landscape) ----------- */
 @media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : landscape) {
