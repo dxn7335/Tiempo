@@ -10,10 +10,3 @@ Google Maps
 Made with Javascript, HTML, CSS, JQuery, Backbone,js
 
 Images not included.
-
-
-Bug
-=====
-
-1.) iPhone 4 and below, the app itself is too large and the bottom section of current weather view is cut off.  
-2.) Could be a server problem, but on one test, the chrome returned error: unexpected end of output on main.js
