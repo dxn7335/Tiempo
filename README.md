@@ -12,9 +12,9 @@ Made with Javascript, HTML, CSS
 Must be on Mobile Device to view app, if not, the app will output a promotional page.  
   
 Dependencies***  
--JQuery
--BackboneJS
--UnderscoreJS
--RequireJS
+- JQuery  
+- BackboneJS  
+- UnderscoreJS  
+- RequireJS
   
 
