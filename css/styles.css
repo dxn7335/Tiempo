@@ -563,8 +563,10 @@ html,body{
 		margin-left: -12%;	
 	}
 	.list_day .temp{
-		margin-left: 8%;
-		font-weight:300;
+		margin-top: 2%;
+        font-weight: 300;
+        display: inline-block;
+        float: right;
 	}
 
 
