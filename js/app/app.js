@@ -85,10 +85,12 @@ define(['model', 'mainView', 'header'],function(model, mainView, header){
 		//sends request to OpenWeatherMap API
 		function getWeatherData(location){
 			console.log('query weather data');
+			$.support.cors = true;
 			$.ajax({
 				type: 'GET',
 				url: weatherURL+location,
-				cache : false,
+				crossDomain: true,
+				dataType:'jsonp',
 				success: function(xhr){
 					console.log('start weather data');
 					Model.parseWeatherData(xhr);

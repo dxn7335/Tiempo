@@ -46,6 +46,8 @@ $(function(){
 		        app: '../app/app',
 		        model: '../app/model',
                 mainView: '../app/mainView',
+				header: '../app/header',
+				settings: '../app/settings'
 		    }
 		});
 
