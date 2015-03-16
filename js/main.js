@@ -28,10 +28,12 @@ $(function(){
 	        return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows());
 	    }
 	};
-
-	//if viewing on mobile device
+	
+	/////////////////////////////
+	//VIEWING ON MOBILE DEVICE
 	if( isMobile.any() ){
-
+		
+		/* CONFIGURE REQUIRED COMPONENTS TO RUN TIEMPO */
 		$('#desktop-view').remove();
 
 		requirejs.config({
@@ -58,12 +60,15 @@ $(function(){
 			if( isMobile.iOS() ){
 				app.iOS = true;
 			}
-            // Initialize App
+            		// Initialize App
 			app.init();
 		});
 
 	}
-    //Change to desktop view -- Desktop version of app not yet implemented so a promotional page is given
+	
+	//////////////////////
+        // VIEWING ON DESKTOP 
+        // Desktop version of app not yet implemented so a promotional page is given
 	else{
 		desktop_view.init();
 	}
