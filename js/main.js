@@ -142,6 +142,7 @@ app = (function(){
 			type: 'GET',
 			url: weatherURL+location,
 			cache : false,
+			dataType:'jsonp',
 			success: function(xhr){
 				console.log('start weather data');
 				app.model.parseWeatherData(xhr);
